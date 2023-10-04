@@ -7,7 +7,7 @@ We prove Fermat's Last Theorem for regular primes and give some of the necessary
 We recall basic facts about the discriminant.
 
 \begin{lemma}\label{lemma:alt_definition_of_norm}
-	\lean{algebra.norm_eq_prod_embeddings}
+	\lean{Algebra.norm_eq_prod_embeddings}
 	\leanok
 	Let $K$ be a number field, $\a \in K$ and let $\sigma_i$ be the embeddings of $K$ into $\CC$. Then \[N_{K/\QQ}(\a)=\prod_i \sigma_i(\a)  \].
 \end{lemma}
@@ -27,16 +27,16 @@ We recall basic facts about the discriminant.
 \end{proof}
 
 \begin{definition}\label{defn_of_disc}
-	\lean{algebra.discr}
+	\lean{Algebra.discr}
 	\leanok
 	Let $A,K$ be commutative rings with $K$ and $A$-algebra. let $B=\{b_1,\dots,b_n\}$ be a set of elements in $K$. The discriminant of $B$ is defined as \[\Delta(B)=  \det \left (\begin{matrix} \Tr_{K/A}(b_1b_1) &\cdots& \Tr_{K/A}(b_1b_n)\\ \vdots & & \vdots \\  \Tr_{K/A}(b_nb_1) &\cdots& \Tr_{K/A}(b_nb_n)
 	\end{matrix} \right ).\]
 \end{definition}
 
 \begin{lemma}\label{lem:lin_indep_iff_disc_ne_zero}
-	\uses{defn_of_disc, lemma:alt_definition_of_norm}
+	\uses{defn_of_disc,Algebra.discr, lemma:alt_definition_of_norm}
 	\leanok
-	\lean{algebra.discr_not_zero_of_basis}
+	\lean{Algebra.discr_not_zero_of_basis}
 	Let $L/K$ be an extension of fields and let $B=\{b_1,\dots,b_n\}$ be a $K$-basis of $L$. Then $\Delta(B) \neq 0$.
 \end{lemma}
 \begin{proof}
@@ -47,7 +47,7 @@ We recall basic facts about the discriminant.
 \begin{lemma}\label{lem:disc_change_of_basis}
 	\uses{defn_of_disc}
 	\leanok
-	\lean{algebra.discr_of_matrix_mul_vec}
+	\lean{Algebra.discr_of_matrix_mulVec}
 	Let $K$ be a number field and $B,B'$ bases for $K/\QQ$. If $P$ denotes the change of basis matrix, then \[\Delta(B)=\det(P)^2 \Delta(B').\]
 \end{lemma}
 \begin{proof}
@@ -58,7 +58,7 @@ We recall basic facts about the discriminant.
 \begin{lemma}\label{lemma:disc_via_embs}
 	\uses{defn_of_disc, trace_eq_sum_embeddings, lemma:alt_definition_of_trace}
 	\leanok
-	\lean{algebra.discr_eq_det_embeddings_matrix_reindex_pow_two}
+	\lean{Algebra.discr_eq_det_embeddingsMatrixReindex_pow_two}
 	Let $K$ be a number field with basis $B=\{b_1,\dots,b_n\}$ and let $\sigma_1,\dots,\sigma_n$ be the embeddings of $K$ into $\CC$. Now let $M$ be the matrix  \[\left (\begin{matrix} \sigma_1(b_1) &\cdots& \sigma_1(b_n)\\ \vdots & & \vdots \\  \sigma_n(b_1) &\cdots& \sigma_n(b_n)
 	\end{matrix} \right ).\] Then \[\Delta(B)=\det(M)^2.\]
 \end{lemma}
