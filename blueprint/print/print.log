@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.8) (preloaded format=xelatex 2023.10.4)  4 OCT 2023 12:48
+This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.8) (preloaded format=xelatex 2023.10.4)  4 OCT 2023 18:07
 entering extended mode
 **./print.tex
 (print.tex
@@ -405,14 +405,17 @@ File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 [5] [6] [7]))
 (C:\Users\chris\FLT_regular_blueprint\FltRegular\blueprint\print\print.bbl)
 [8] (C:\Users\chris\FLT_regular_blueprint\FltRegular\blueprint\print\print.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `print.out' has not changed.
-(rerunfilecheck)             Checksum: 1D925A8B4B9B9F10A1E92BA71BF0A2F2;941.
+(rerunfilecheck)             Checksum: A8E1EAC795EDE6729C459F2A0F378DAD;860.
  ) 
 Here is how much of TeX's memory you used:
- 10460 strings out of 411335
- 149041 string characters out of 2832716
- 491447 words of memory out of 3000000
- 30542 multiletter control sequences out of 15000+600000
+ 10459 strings out of 411335
+ 149031 string characters out of 2832716
+ 491318 words of memory out of 3000000
+ 30541 multiletter control sequences out of 15000+600000
  411400 words of font info for 66 fonts, out of 8000000 for 9000
  1509 hyphenation exceptions out of 8191
  71i,8n,80p,1028b,448s stack positions out of 5000i,500n,10000p,200000b,80000s
