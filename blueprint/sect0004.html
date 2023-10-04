@@ -31,22 +31,19 @@
 <nav class="toc">
 <ul class="sub-toc-0">
 <li class="">
-  <a href="cha-demo.html"><span class="toc_ref">1</span> <span class="toc_entry">Demo</span></a>
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Introduction</span></a>
  </li>
 <li class="">
-  <a href="sect0001.html"><span class="toc_ref">2</span> <span class="toc_entry">Introduction</span></a>
+  <a href="sect0002.html"><span class="toc_ref">2</span> <span class="toc_entry">Discriminants of number fields</span></a>
  </li>
 <li class="">
-  <a href="sect0002.html"><span class="toc_ref">3</span> <span class="toc_entry">Discriminants of number fields</span></a>
- </li>
-<li class="">
-  <a href="sect0003.html"><span class="toc_ref">4</span> <span class="toc_entry">Cyclotomic fields</span></a>
+  <a href="sect0003.html"><span class="toc_ref">3</span> <span class="toc_entry">Cyclotomic fields</span></a>
  </li>
 <li class=" active current">
-  <a href="sect0004.html"><span class="toc_ref">5</span> <span class="toc_entry">Fermat’s Last Theorem for regular primes</span></a>
+  <a href="sect0004.html"><span class="toc_ref">4</span> <span class="toc_entry">Fermat’s Last Theorem for regular primes</span></a>
  </li>
 <li class="">
-  <a href="sect0005.html"><span class="toc_ref">6</span> <span class="toc_entry">Bibliography</span></a>
+  <a href="sect0005.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
  </li>
 <li ><a href="dep_graph_document.html">Dependency graph</a></li>
 </ul>
@@ -57,13 +54,13 @@
 
 
 <div class="main-text">
-<h1 id="a0000000005">5 Fermat’s Last Theorem for regular primes</h1>
+<h1 id="a0000000005">4 Fermat’s Last Theorem for regular primes</h1>
 <p><div class="lemma_thmwrapper" id="lem:flt_ideals_coprime">
   <div class="lemma_thmheading">
     <span class="lemma_thmcaption">
     Lemma
     </span>
-    <span class="lemma_thmlabel">5.1</span>
+    <span class="lemma_thmlabel">4.1</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#lem:flt_ideals_coprime">#</a>
@@ -79,7 +76,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="sect0003.html#lemma:zeta_pow_sub_eq_unit_zeta_sub_one">Lemma 4.8</a></li>
+          <li><a href="sect0003.html#lemma:zeta_pow_sub_eq_unit_zeta_sub_one">Lemma 3.8</a></li>
         </ul>
 
       </div>
@@ -93,7 +90,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=flt_ideals_coprime#doc" target="_blank" rel="noopener noreferrer">flt_ideals_coprime</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=flt_ideals_coprime#doc" target="_blank" rel="noopener noreferrer">flt_ideals_coprime</a></li>
         </ul>
 
       </div>
@@ -123,7 +120,7 @@
     <span class="expand-proof">▼</span>
   </div>
   <div class="proof_content">
-  <p>Lemma <a href="sect0003.html#lemma:zeta_pow_sub_eq_unit_zeta_sub_one">4.8</a> gives that \(u\) is a unit. So all that needs to be proved is that the ideals are coprime. Assume not, then for some \(i \neq j\) we have some prime ideal \(\mathfrak {p}\) dividing by \((x+y\zeta _p^i)\) and \((x+y\zeta _p^j)\). It must then also divide their sum and their difference, so we must have \(\mathfrak {p}| (1-\zeta _p)\) or \(\mathfrak {p}| y\). Similarly, \(\mathfrak {p}\) divides \(\zeta _p^j(x+y\zeta _p^i)-\zeta _p^i(x+y\zeta _p^j)\) so \(\mathfrak {p}\) divides \(x\) or \((1-\zeta _p)\). We can’t have \(\mathfrak {p}\) dividing \(x,y\) since they are coprime, therefore \(\mathfrak {p}|(1-\zeta _p)\). We know that since \((1-\zeta _p)\) has norm \(p\) it must be a prime ideal, so \(\mathfrak {p}=(1-\zeta _p)\). Now, note that \(x+y \equiv x+y\zeta _p^i \equiv 0 \mod \mathfrak {p}\). But since \(x,y \in \mathbb {Z}\) this means we would have \(x+y \equiv 0 \pmod p\), which implies \(z^p \equiv 0 \pmod p\) which contradicts our assumptions. </p>
+  <p>Lemma <a href="sect0003.html#lemma:zeta_pow_sub_eq_unit_zeta_sub_one">3.8</a> gives that \(u\) is a unit. So all that needs to be proved is that the ideals are coprime. Assume not, then for some \(i \neq j\) we have some prime ideal \(\mathfrak {p}\) dividing by \((x+y\zeta _p^i)\) and \((x+y\zeta _p^j)\). It must then also divide their sum and their difference, so we must have \(\mathfrak {p}| (1-\zeta _p)\) or \(\mathfrak {p}| y\). Similarly, \(\mathfrak {p}\) divides \(\zeta _p^j(x+y\zeta _p^i)-\zeta _p^i(x+y\zeta _p^j)\) so \(\mathfrak {p}\) divides \(x\) or \((1-\zeta _p)\). We can’t have \(\mathfrak {p}\) dividing \(x,y\) since they are coprime, therefore \(\mathfrak {p}|(1-\zeta _p)\). We know that since \((1-\zeta _p)\) has norm \(p\) it must be a prime ideal, so \(\mathfrak {p}=(1-\zeta _p)\). Now, note that \(x+y \equiv x+y\zeta _p^i \equiv 0 \mod \mathfrak {p}\). But since \(x,y \in \mathbb {Z}\) this means we would have \(x+y \equiv 0 \pmod p\), which implies \(z^p \equiv 0 \pmod p\) which contradicts our assumptions. </p>
 
   </div>
 </div>
@@ -132,7 +129,7 @@
     <span class="lemma_thmcaption">
     Lemma
     </span>
-    <span class="lemma_thmlabel">5.2</span>
+    <span class="lemma_thmlabel">4.2</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#lem:exists_int_sub_pow_prime_dvd">#</a>
@@ -147,7 +144,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=exists_int_sub_pow_prime_dvd#doc" target="_blank" rel="noopener noreferrer">exists_int_sub_pow_prime_dvd</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=exists_int_sub_pow_prime_dvd#doc" target="_blank" rel="noopener noreferrer">exists_int_sub_pow_prime_dvd</a></li>
         </ul>
 
       </div>
@@ -177,7 +174,7 @@
     <span class="lemma_thmcaption">
     Lemma
     </span>
-    <span class="lemma_thmlabel">5.3</span>
+    <span class="lemma_thmlabel">4.3</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#lem:dvd_coeff_cycl_integer">#</a>
@@ -192,7 +189,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=dvd_coeff_cycl_integer#doc" target="_blank" rel="noopener noreferrer">dvd_coeff_cycl_integer</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=dvd_coeff_cycl_integer#doc" target="_blank" rel="noopener noreferrer">dvd_coeff_cycl_integer</a></li>
         </ul>
 
       </div>
@@ -222,7 +219,7 @@
     <span class="lemma_thmcaption">
     Lemma
     </span>
-    <span class="lemma_thmlabel">5.4</span>
+    <span class="lemma_thmlabel">4.4</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#lem:exists_int_sum_eq_zero">#</a>
@@ -237,7 +234,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=exists_int_sum_eq_zero#doc" target="_blank" rel="noopener noreferrer">exists_int_sum_eq_zero</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=exists_int_sum_eq_zero#doc" target="_blank" rel="noopener noreferrer">exists_int_sum_eq_zero</a></li>
         </ul>
 
       </div>
@@ -261,7 +258,7 @@
     <span class="expand-proof">▼</span>
   </div>
   <div class="proof_content">
-  <p> Using lemma <a href="sect0003.html#lemma:unit_lemma">4.7</a> we have \((x+y\zeta _p^i) =\beta \zeta _p^k \alpha ^p\) which is congruent modulo \(p\) to \(\beta \zeta _p^k a \pmod p\) for some integer \(a\) by <a href="sect0004.html#lem:exists_int_sub_pow_prime_dvd">5.2</a>. Now, if we consider the complex conjugate we have \(\overline{(x+y\zeta _p^i) }\equiv \beta \zeta _p^{-k}a \pmod p\). Looking at \((x+y\zeta _p^i)-\zeta _p^{2k}\overline{(x+y\zeta _p^i) }\) then gives the result. </p>
+  <p> Using lemma <a href="sect0003.html#lemma:unit_lemma">3.7</a> we have \((x+y\zeta _p^i) =\beta \zeta _p^k \alpha ^p\) which is congruent modulo \(p\) to \(\beta \zeta _p^k a \pmod p\) for some integer \(a\) by <a href="sect0004.html#lem:exists_int_sub_pow_prime_dvd">4.2</a>. Now, if we consider the complex conjugate we have \(\overline{(x+y\zeta _p^i) }\equiv \beta \zeta _p^{-k}a \pmod p\). Looking at \((x+y\zeta _p^i)-\zeta _p^{2k}\overline{(x+y\zeta _p^i) }\) then gives the result. </p>
 
   </div>
 </div>
@@ -270,7 +267,7 @@
     <span class="lemma_thmcaption">
     Lemma
     </span>
-    <span class="lemma_thmlabel">5.5</span>
+    <span class="lemma_thmlabel">4.5</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#lemma:may_assume_coprime">#</a>
@@ -286,10 +283,10 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="sect0003.html#lemma:unit_lemma">Lemma 4.7</a></li>
-          <li><a href="sect0003.html#lemma:zeta_pow_sub_eq_unit_zeta_sub_one">Lemma 4.8</a></li>
-          <li><a href="sect0003.html#lemma:ideals_mult_to_power">Lemma 4.9</a></li>
-          <li><a href="sect0003.html#theorem:ring_of_ints_of_cyclo">Theorem 4.4</a></li>
+          <li><a href="sect0003.html#lemma:unit_lemma">Lemma 3.7</a></li>
+          <li><a href="sect0003.html#lemma:zeta_pow_sub_eq_unit_zeta_sub_one">Lemma 3.8</a></li>
+          <li><a href="sect0003.html#lemma:ideals_mult_to_power">Lemma 3.9</a></li>
+          <li><a href="sect0003.html#theorem:ring_of_ints_of_cyclo">Theorem 3.4</a></li>
         </ul>
 
       </div>
@@ -303,7 +300,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=FltRegular.CaseI.may_assume#doc" target="_blank" rel="noopener noreferrer">FltRegular.CaseI.may_assume</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=FltRegular.CaseI.may_assume#doc" target="_blank" rel="noopener noreferrer">FltRegular.CaseI.may_assume</a></li>
         </ul>
 
       </div>
@@ -347,7 +344,7 @@
     <span class="definition_thmcaption">
     Definition
     </span>
-    <span class="definition_thmlabel">5.6</span>
+    <span class="definition_thmlabel">4.6</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#defn:is_regular_number">#</a>
@@ -360,7 +357,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=IsRegularNumber#doc" target="_blank" rel="noopener noreferrer">IsRegularNumber</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=IsRegularNumber#doc" target="_blank" rel="noopener noreferrer">IsRegularNumber</a></li>
         </ul>
 
       </div>
@@ -378,7 +375,7 @@
     <span class="theorem_thmcaption">
     Theorem
     </span>
-    <span class="theorem_thmlabel">5.7</span>
+    <span class="theorem_thmlabel">4.7</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#theorem:FLT_case_one">#</a>
@@ -394,11 +391,11 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="sect0004.html#defn:is_regular_number">Definition 5.6</a></li>
-          <li><a href="sect0004.html#lem:exists_int_sum_eq_zero">Lemma 5.4</a></li>
-          <li><a href="sect0004.html#lem:dvd_coeff_cycl_integer">Lemma 5.3</a></li>
-          <li><a href="sect0004.html#lemma:may_assume_coprime">Lemma 5.5</a></li>
-          <li><a href="sect0004.html#lem:flt_ideals_coprime">Lemma 5.1</a></li>
+          <li><a href="sect0004.html#defn:is_regular_number">Definition 4.6</a></li>
+          <li><a href="sect0004.html#lem:exists_int_sum_eq_zero">Lemma 4.4</a></li>
+          <li><a href="sect0004.html#lem:dvd_coeff_cycl_integer">Lemma 4.3</a></li>
+          <li><a href="sect0004.html#lemma:may_assume_coprime">Lemma 4.5</a></li>
+          <li><a href="sect0004.html#lem:flt_ideals_coprime">Lemma 4.1</a></li>
         </ul>
 
       </div>
@@ -412,7 +409,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=FltRegular.caseI#doc" target="_blank" rel="noopener noreferrer">FltRegular.caseI</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=FltRegular.caseI#doc" target="_blank" rel="noopener noreferrer">FltRegular.caseI</a></li>
         </ul>
 
       </div>
@@ -442,7 +439,7 @@
 <div class="displaymath" id="a0000000062">
   \[ z^p=(x+y)(x+\zeta _py)\cdots (x+y\zeta _p^{p-1}) \]
 </div>
-<p> as ideals. Then since by <a href="sect0004.html#lem:flt_ideals_coprime">5.1</a> we know the ideals are coprime, then by lemma <a href="sect0003.html#lemma:ideals_mult_to_power">4.9</a> we have that each \((x+y\zeta _p^i)=\mathfrak {a}^p\), for \(\mathfrak {a}\) some ideal. Note that, \([\mathfrak {a}^p]=1\) in the class group. Now, since \(p\) does not divide the size of the class group we have that \([\mathfrak {a}]=1\) in the class group, so its principal. So we have \(x+y\zeta _p^i=u_i\alpha _i^p\) with \(u_i\) a unit. So by <a href="sect0004.html#lem:exists_int_sum_eq_zero">5.4</a> we have some \(k\) such that \(x+y\zeta _p-\zeta _p^{2k}x-\zeta _p^{2k-1}y \equiv 0 \pmod p\). If \(1,\zeta _p,\zeta _p^{2k},\zeta _p^{2k-1}\) are distinct, then <a href="sect0004.html#lem:dvd_coeff_cycl_integer">5.3</a> says that (since \(p \geq 5\)) \(p\) divides \(x,y\), contrary to our assumption. So they cannot be distinct, but checking each case leads to a contradiction, therefore there cannot be any such solutions. </p>
+<p> as ideals. Then since by <a href="sect0004.html#lem:flt_ideals_coprime">4.1</a> we know the ideals are coprime, then by lemma <a href="sect0003.html#lemma:ideals_mult_to_power">3.9</a> we have that each \((x+y\zeta _p^i)=\mathfrak {a}^p\), for \(\mathfrak {a}\) some ideal. Note that, \([\mathfrak {a}^p]=1\) in the class group. Now, since \(p\) does not divide the size of the class group we have that \([\mathfrak {a}]=1\) in the class group, so its principal. So we have \(x+y\zeta _p^i=u_i\alpha _i^p\) with \(u_i\) a unit. So by <a href="sect0004.html#lem:exists_int_sum_eq_zero">4.4</a> we have some \(k\) such that \(x+y\zeta _p-\zeta _p^{2k}x-\zeta _p^{2k-1}y \equiv 0 \pmod p\). If \(1,\zeta _p,\zeta _p^{2k},\zeta _p^{2k-1}\) are distinct, then <a href="sect0004.html#lem:dvd_coeff_cycl_integer">4.3</a> says that (since \(p \geq 5\)) \(p\) divides \(x,y\), contrary to our assumption. So they cannot be distinct, but checking each case leads to a contradiction, therefore there cannot be any such solutions. </p>
 
   </div>
 </div>
@@ -451,7 +448,7 @@
     <span class="theorem_thmcaption">
     Theorem
     </span>
-    <span class="theorem_thmlabel">5.8</span>
+    <span class="theorem_thmlabel">4.8</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#thm:Kummers_lemma">#</a>
@@ -464,7 +461,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=eq_pow_prime_of_unit_of_congruent#doc" target="_blank" rel="noopener noreferrer">eq_pow_prime_of_unit_of_congruent</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=eq_pow_prime_of_unit_of_congruent#doc" target="_blank" rel="noopener noreferrer">eq_pow_prime_of_unit_of_congruent</a></li>
         </ul>
 
       </div>
@@ -487,7 +484,7 @@
     <span class="lemma_thmcaption">
     Lemma
     </span>
-    <span class="lemma_thmlabel">5.9</span>
+    <span class="lemma_thmlabel">4.9</span>
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#lem:gen_dvd_by_frak_p">#</a>
     <a class="icon proof" href="sect0004.html#a0000000063"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
@@ -527,7 +524,7 @@
     <span class="lemma_thmcaption">
     Lemma
     </span>
-    <span class="lemma_thmlabel">5.10</span>
+    <span class="lemma_thmlabel">4.10</span>
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#lem:gen_ideal_coprimality">#</a>
 
@@ -557,7 +554,7 @@
     <span class="theorem_thmcaption">
     Theorem
     </span>
-    <span class="theorem_thmlabel">5.11</span>
+    <span class="theorem_thmlabel">4.11</span>
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#thm:gen_flt_eqn">#</a>
     <button class="modal"><svg  class="icon icon-mindmap "><use xlink:href="symbol-defs.svg#icon-mindmap"></use></svg>
@@ -570,8 +567,8 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="sect0004.html#lem:gen_dvd_by_frak_p">Lemma 5.9</a></li>
-          <li><a href="sect0004.html#lem:gen_ideal_coprimality">Lemma 5.10</a></li>
+          <li><a href="sect0004.html#lem:gen_dvd_by_frak_p">Lemma 4.9</a></li>
+          <li><a href="sect0004.html#lem:gen_ideal_coprimality">Lemma 4.10</a></li>
         </ul>
 
       </div>
@@ -589,7 +586,7 @@
     <span class="theorem_thmcaption">
     Theorem
     </span>
-    <span class="theorem_thmlabel">5.12</span>
+    <span class="theorem_thmlabel">4.12</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#theorem:FLT_case_two">#</a>
@@ -603,8 +600,8 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="sect0004.html#thm:Kummers_lemma">Theorem 5.8</a></li>
-          <li><a href="sect0004.html#thm:gen_flt_eqn">Theorem 5.11</a></li>
+          <li><a href="sect0004.html#thm:Kummers_lemma">Theorem 4.8</a></li>
+          <li><a href="sect0004.html#thm:gen_flt_eqn">Theorem 4.11</a></li>
         </ul>
 
       </div>
@@ -618,7 +615,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=FltRegular.caseII#doc" target="_blank" rel="noopener noreferrer">FltRegular.caseII</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=FltRegular.caseII#doc" target="_blank" rel="noopener noreferrer">FltRegular.caseII</a></li>
         </ul>
 
       </div>
@@ -640,7 +637,7 @@
     <span class="theorem_thmcaption">
     Theorem
     </span>
-    <span class="theorem_thmlabel">5.13</span>
+    <span class="theorem_thmlabel">4.13</span>
     ✓
     <div class="thm_icons">
     <a class="icon proof" href="sect0004.html#FLT_regular">#</a>
@@ -654,8 +651,8 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="sect0004.html#theorem:FLT_case_one">Theorem 5.7</a></li>
-          <li><a href="sect0004.html#theorem:FLT_case_two">Theorem 5.12</a></li>
+          <li><a href="sect0004.html#theorem:FLT_case_one">Theorem 4.7</a></li>
+          <li><a href="sect0004.html#theorem:FLT_case_two">Theorem 4.12</a></li>
         </ul>
 
       </div>
@@ -669,7 +666,7 @@
 </button>
         </header>
                 <ul class="uses">
-          <li><a href="https://leanprover-community.github.io/mathlib4_docs//find/?pattern=flt_regular#doc" target="_blank" rel="noopener noreferrer">flt_regular</a></li>
+          <li><a href="https://cbirkbeck.github.io/FltRegulartest/doc//find/?pattern=flt_regular#doc" target="_blank" rel="noopener noreferrer">flt_regular</a></li>
         </ul>
 
       </div>
