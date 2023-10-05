@@ -28,7 +28,7 @@ jobs:
         run: ~/.elan/bin/lake -Kenv=dev build FltRegular
 
       - name: Build documentation
-        run: ~/.elan/bin/lake -Kenv=dev build FltRegular:docs
+        run: ~/.elan/bin/lake -Kenv=dev build Std:docs Mathlib:docs FltRegular:docs
 
       - name: Install Python
         uses: actions/setup-python@v4
