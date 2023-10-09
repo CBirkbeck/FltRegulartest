@@ -244,7 +244,7 @@ We recall basic facts about the discriminant.
 \begin{lemma}\label{lemma:zeta_pow_sub_eq_unit_zeta_sub_one}
 	\lean{is_primitive_root.zeta_pow_sub_eq_unit_zeta_sub_one}
 	\leanok
-	Let $p$ be an odd prime, $\zeta_p$ a primitive $p$-th root of unity and let $K=\QQ(\zeta_p)$. Then for any $i,j \in {0,\dots,p-1}$ with $i \ne j$, there exists a unit $u \in \mathcal{O}_K^\times$ such that $\zeta_p^i-\zeta_p^j = u * (\zeta_p-1)$.
+	Let $p$ be an odd prime, $\zeta_p$ a primitive $p$-th root of unity and let $K=\QQ(\zeta_p)$. Then for any $i,j \in {0,\dots,p-1}$ with $i \ne j$, there exists a unit $u \in \mathcal{O}_K^\times$ such that $\zeta_p^i-\zeta_p^j = u  (\zeta_p-1)$.
 \end{lemma}
 \begin{proof}
 	\leanok
@@ -398,3 +398,81 @@ In these next few lemmas we are following \cite{Borevich_Shafarevich}.
 	\uses{theorem:FLT_case_one,theorem:FLT_case_two}
 	Let $p$ be an odd regular prime.  Then \[x^p+y^p=z^p\] has no solutions with $x,y,z \in \ZZ$ and $xyz \ne 0$.
 \end{theorem}
+
+\section{Kummer's Lemma}
+
+In this section we prove Theorem \ref{thm:Kummers_lemma}. The proof follows \cite{SD}. We begin with some lemmas that will be needed in the proof.
+
+
+\begin{lemma}\label{lem:exists_alg_int}
+	Let $K$ be a number fields and $\a \in K$. Then there exists a $n \in \ZZ\backslash\{0\}$ such that $n \a$ is an algebraic integer.  
+\end{lemma}
+
+\begin{theorem}\label{Hilbert90}
+Let $K/F$ be a Galois extension of number fields whose Galois group $\Gal(K/F)$ is cyclic with generator $\sigma$. If $\a \in K$ is such that $N_{K/F}(\a)=1$, then \[ \a =\beta/ \sigma(\beta)\] for some $\beta \in \OO_K$. 
+
+
+\end{theorem}
+
+\begin{proof}
+  Pick some $\gamma \in K$ and consider \[\beta=\gamma \a+ \sigma(\gamma)\a \sigma(\a)+\cdots+\sigma^{n-1}(\gamma)\a \sigma(\a)\cdots \sigma^{n-1}(\a),\] where $[K/F]=n$. Since the norm $\a$ is $1$ then we have $\a \sigma(\a)\cdots \sigma^{n-1}(\a)=1$ from which one verifies that $\a \sigma(\beta)=\beta$. This also uses that since we know that Galois group is cyclic, all the embeddings are given by $\sigma^i$. Note that $ \a+ \sigma\a \sigma(\a)+\cdots+\sigma^{n-1}\a \sigma(\a)\cdots \sigma^{n-1}(\a)$ is a linear combination of the embeddings $\sigma^i$. Now, using \ref{lem:lin_indep_iff_disc_ne_zero} we can check that they must be linearly independent. Therefore, it is possible to find a $\gamma$ such that $\beta \neq 0$. Putting everything together we have found $\a=\beta/\sigma(\beta)$. Using \ref{lem:exists_alg_int} we see that its possible to make sure $\beta \in \OO_K$ as required.
+	
+
+	
+
+\end{proof}
+
+
+\begin{lemma}\label{lem:HilbertNot90}
+	Let $K/F$ be a Galois extension of $F=\QQ(\zeta_p)$ with  Galois group $\Gal(K/F)$ cyclic with generator $\sigma$. Then there exists a unit $\eta \in \OO_K$ such that $N_{K/F}(\eta)=1$ but does not have the form $\epsilon/\sigma(\epsilon)$ for any unit $\e \in \OO_K$.
+	
+\end{lemma}
+
+\begin{proof}
+	Let \[U_1= \OO_K^\times / \OO_F^\times \qquad \text{and} \qquad U=U_1/U_{1,tors}.\] By Dirichlet's unit theorem we know $U$ is a free abelian group of rank $m=(p-1)^2/2$ generators\footnote{ Can we get away without knowing the exact rank?}. For any $f =\sum_n a_n x^n \in \ZZ[x]$  and $\a \in K$ we let $\a^f$ denote $\prod_n \sigma^n(\a)^{a_n}$. For any $\theta_i \in U$, let $S(\theta_1, \dots,\theta_r)$ denote the set of $\sigma^i(\theta_j)$ for $i \in \{0,\dots,p-2\}$ and $j \in \{1,\dots,r\}$.
+	
+	\paragraph{\textbf{Claim 1:}} There exist $\theta_1,\dots,\theta_m$ such that  the elements of $S(\theta_1, \dots,\theta_m)$ are multiplicatively independent, therefore $S(\theta_1, \dots,\theta_m)$ generates a subgroup of finite index in $U$.
+	
+		
+	\paragraph{\textbf{Claim 2:}} If $\theta_i$ are chosen so that the index of $S(\theta_1, \dots,\theta_m)$ in $U$ is minimal, then no $\theta_i$ has the form $\theta^{1-\sigma}$ for $\theta \in U$.
+	
+	
+		\paragraph{\textbf{Claim 3:}} If $a_i \in \ZZ$ are not all divisible by $p$, then $\prod_i \theta_i^{a_i}$ is not of the form $\theta^{1-\sigma}$ for $\theta \in U$.
+		
+	Using these claims we can finish the proof as follows: We fist assume that $\zeta_p= \xi^{1-\sigma}$ with $\xi \in \OO_K^\times$ as otherwise we can take $\eta=\zeta_p$. By construction it follows that $\xi^p=N_{K/F}(\xi)$ is a unit in $F$ and $\xi$ is not in $F$. Picking representatives $\eta_i \in \OO_K^\times$ for the $\theta_i$ we can consider the group they generate, denoted $S(\eta_i)$. There is a map \[\phi: S(\eta_i) \to \OO_F^\times/\mu_F\] induced by $N_{K/F}$, where $\mu_F$ denote the $p$-th roots of unity in $F$.	There are now three possibilities:
+	
+
+	
+		
+	\begin{enumerate}[(a)]
+		\item $\xi^p$ is a primitive $p$-th root of unity.
+		\item No non-trivial power of $\xi^p$ is in the image of $\phi$
+		\item Neither (a) or (b) hold.
+	\end{enumerate} 
+	
+	
+
+\end{proof}
+
+
+\begin{lemma}\label{lem:ramification_lem}
+	Let $F=\QQ(\zeta_p)$ with $\zeta_p$ a primitive $p$-th root of unity. If $\xi \in \OO_F$ and coprime to $\lam_p:=1-\zeta_p$ and if \[\xi \equiv \a_0^p \mod \lam_p^p  \] for some $\a_0 \in \OO_{F_\gothp}^\times$ (the ring of integers of the completion of $F$ at $\lam_p$), then the ideal $(\lam_p)$ is unramified in $K/F$ where $K=F(\sqrt[p]{\xi})$.
+\end{lemma}
+
+Before giving the proofs of the above, we will first show how one can use this to prove the following lemma (from which Kummer's lemma is immediate):
+
+\begin{lemma}\label{Kummer_alt}
+Let $u \in F$ with $F=\QQ(\zeta_p)$ be a unit such that \[u \equiv a^p \mod \lam_p^p\] for some $a \in \OO_F$. The either $u = \epsilon^p$ for some $\epsilon \in \OO_F^\times$ or $p$ divides the class number of $F$.
+	
+\end{lemma}
+
+\begin{proof}
+	Assume $u$ is not a $p$-th power. Then let $K=F(\sqrt[p]{u})$  and $\eta \in K$ be as in \ref{lem:HilbertNot90}. Then $K/F$ is Galois and cyclic of degree $p$. Not by Hilbert 90 (\ref{Hilbert90})  we can find $\beta \in \OO_K$ such that \[\eta = \beta/\sigma(\beta)\] (but note that by our assumption $\beta$ is not a unit). Note that the ideal $(\eta)$ is invariant under $\Gal(K/F)$ by construction and by \ref{lem:ramification_lem} it cannot be ramified, therefore $(\beta)$ is the extension of scalars of some ideal $\gothb$ in $\OO_F$. Now if $\gothb$ is principal generated by some $\gamma$ then $\beta=v \gamma$  for some $v \in \OO_K^\times$. But this means that \[\eta = \beta/\sigma(\beta)= v/(\sigma(v)) \cdot \gamma / \sigma(\gamma)=v/\sigma(v)  \] contradicting our assumption coming from \ref{lem:HilbertNot90}. On the other hand, $\gothb^p= N_{K/F}(\beta)$ is principal, meaning $p$ divides the class group of $F$.
+	
+	
+		
+	
+	
+\end{proof}
+
+
