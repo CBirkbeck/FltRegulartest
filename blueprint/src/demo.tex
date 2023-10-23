@@ -408,7 +408,7 @@ In this section we prove Theorem \ref{thm:Kummers_lemma}. The proof follows \cit
 	Let $K$ be a number fields and $\a \in K$. Then there exists a $n \in \ZZ\backslash\{0\}$ such that $n \a$ is an algebraic integer.  
 \end{lemma}
 
-\begin{theorem}\label{Hilbert90}
+\begin{theorem}[Hilbert 90]\label{Hilbert90}
 Let $K/F$ be a Galois extension of number fields whose Galois group $\Gal(K/F)$ is cyclic with generator $\sigma$. If $\a \in K$ is such that $N_{K/F}(\a)=1$, then \[ \a =\beta/ \sigma(\beta)\] for some $\beta \in \OO_K$. 
 
 
@@ -423,44 +423,73 @@ Let $K/F$ be a Galois extension of number fields whose Galois group $\Gal(K/F)$ 
 \end{proof}
 
 
-\begin{lemma}\label{lem:HilbertNot90}
+\begin{theorem}[Hilbert 92]\label{lem:Hilbert92}
 	Let $K/F$ be a Galois extension of $F=\QQ(\zeta_p)$ with  Galois group $\Gal(K/F)$ cyclic with generator $\sigma$. Then there exists a unit $\eta \in \OO_K$ such that $N_{K/F}(\eta)=1$ but does not have the form $\epsilon/\sigma(\epsilon)$ for any unit $\e \in \OO_K$.
 	
-\end{lemma}
+\end{theorem}
 
 \begin{proof}
-	Let \[U_1= \OO_K^\times / \OO_F^\times \qquad \text{and} \qquad U=U_1/U_{1,tors}.\] By Dirichlet's unit theorem we know $U$ is a free abelian group of rank $m=(p-1)^2/2$ generators\footnote{ Can we get away without knowing the exact rank?}. For any $f =\sum_n a_n x^n \in \ZZ[x]$  and $\a \in K$ we let $\a^f$ denote $\prod_n \sigma^n(\a)^{a_n}$. For any $\theta_i \in U$, let $S(\theta_1, \dots,\theta_r)$ denote the set of $\sigma^i(\theta_j)$ for $i \in \{0,\dots,p-2\}$ and $j \in \{1,\dots,r\}$.
-	
-	\paragraph{\textbf{Claim 1:}} There exist $\theta_1,\dots,\theta_m$ such that  the elements of $S(\theta_1, \dots,\theta_m)$ are multiplicatively independent, therefore $S(\theta_1, \dots,\theta_m)$ generates a subgroup of finite index in $U$.
-	
-		
-	\paragraph{\textbf{Claim 2:}} If $\theta_i$ are chosen so that the index of $S(\theta_1, \dots,\theta_m)$ in $U$ is minimal, then no $\theta_i$ has the form $\theta^{1-\sigma}$ for $\theta \in U$.
-	
-	
-		\paragraph{\textbf{Claim 3:}} If $a_i \in \ZZ$ are not all divisible by $p$, then $\prod_i \theta_i^{a_i}$ is not of the form $\theta^{1-\sigma}$ for $\theta \in U$.
-		
-	Using these claims we can finish the proof as follows: We fist assume that $\zeta_p= \xi^{1-\sigma}$ with $\xi \in \OO_K^\times$ as otherwise we can take $\eta=\zeta_p$. By construction it follows that $\xi^p=N_{K/F}(\xi)$ is a unit in $F$ and $\xi$ is not in $F$. Picking representatives $\eta_i \in \OO_K^\times$ for the $\theta_i$ we can consider the group they generate, denoted $S(\eta_i)$. There is a map \[\phi: S(\eta_i) \to \OO_F^\times/\mu_F\] induced by $N_{K/F}$, where $\mu_F$ denote the $p$-th roots of unity in $F$.	There are now three possibilities:
-	
-
-	
-		
-	\begin{enumerate}[(a)]
-		\item $\xi^p$ is a primitive $p$-th root of unity. In this case we can pick $\eta$ as follows:
-
-		\item No non-trivial power of $\xi^p$ is in the image of $\phi$
-		\item Neither (a) or (b) hold.
-	\end{enumerate} 
+This is Hilbert theorem 92 (\cite{Hilbert}), also Lemma 33 of Swinnerton-Dyer's book (\cite{SD}).
 	
 	
 
 \end{proof}
 
 
-\begin{lemma}\label{lem:ramification_lem}
-	Let $F=\QQ(\zeta_p)$ with $\zeta_p$ a primitive $p$-th root of unity. If $\xi \in \OO_F$ and coprime to $\lam_p:=1-\zeta_p$ and if \[\xi \equiv \a_0^p \mod \lam_p^p  \] for some $\a_0 \in \OO_{F_\gothp}^\times$ (the ring of integers of the completion of $F$ at $\lam_p$), then the ideal $(\lam_p)$ is unramified in $K/F$ where $K=F(\sqrt[p]{\xi})$.
+\section{Some Ramification results}
+
+We will need several results about ramification in degree $p$ extensions of $\QQ(\zeta_p)$. Following \cite{SD} we do this by using the relative different ideal of the extension.
+
+\begin{definition}
+   
+    Let $K, F$ be number fields with $F \subseteq K$. Let  $A$ be an additive subgroup of $K$. Let \[A^{-1}=\{ \a \in K | \a A \in \OO_K\}\] and 
+    \[A^* = \{ \a \in K | \Tr_{K/F} (\a A) \in \OO_F\}.\] The relative different $\frak{d}_{K/F}$ of $K/F$ is then defined as $((\OO_K)^*)^{-1}$ which one checks is an integral ideal in $\OO_K$. This is also the annihilator of $\Omega^1_{\OO_K/\OO_F}$ if we want to be fancy.
+\end{definition}
+
+
+\begin{lemma}\label{lem:diff_ideal_eqn}
+    Let $K/F$ be an extension of number fields and let $S$ denote the set of $\a \in \OO_K$ be such that $K=F(\a)$. Then \[ \gothd_{K/F} = \left (m_{\a}'(\a) : \a \in S \right )\] where $m_\a$ is denotes the minimal polynomial of $\a$.
 \end{lemma}
 
-Before giving the proofs of the above, we will first show how one can use this to prove the following lemma (from which Kummer's lemma is immediate):
+\begin{proof}
+    This is \cite[Theorem 20]{SD}
+\end{proof}
+
+\begin{lemma}\label{lem:diff_ram}
+    Let $K/F$ be an extension of number fields with $\gothp_F, \gothp_K$ prime ideas in $K,F$ respectively, with $\gothp_K^e \parallel \gothp_F$ for $e >0$. Then $\gothp_K^{e-1} \mid \gothd_{K/F}$ and $\gothp_K^{e} \mid \gothd_{K/F}$ iff $\gothp_F \mid e$. 
+\end{lemma}
+
+\begin{proof}
+    \cite[Theorem 21]{SD}
+\end{proof}
+
+\begin{lemma}\label{lem:loc_ramification}
+Let $K$ be a number field, $p$ be a rational prime below $\gothp$ and let $\a_0, \xi$ be in $\OO_\gothp^\times$ (the units of the ring of integers of the completion of $K$ at $\gothp$) be such that \[\a_0^p \equiv \xi \mod \gothp^{m+r}\] where $\gothp^m \parallel p$ and $r(p-1)>m$. Then there exists an $\a \in \OO_{\gothp}^\times$ such that $\a^p =\xi$.
+    
+\end{lemma}
+
+\begin{proof}
+    This is \cite[Lemma 20]{SD}
+\end{proof}
+
+\begin{lemma}\label{lem:ramification_lem}
+\uses{lem:loc_ramification,lem:diff_ideal_eqn,lem:diff_ram}
+	Let $F=\QQ(\zeta_p)$ with $\zeta_p$ a primitive $p$-th root of unity. If $\xi \in \OO_F$ and coprime to $\lam_p:=1-\zeta_p$ and if \[\xi \equiv \a_0^p \mod \lam_p^p  \] for some $\a_0 \in \OO_{F_\gothp}^\times$ (the ring of integers of the completion of $F$ at $\lam_p$), then the ideal $(\lam_p)$ is unramified in $K/F$ where $K=F(\sqrt[p]{\xi})$.
+\end{lemma}
+\begin{proof}
+    Suppose that we have $\xi = \a_0^p \mod \lam_p^{p+1}$. The using \ref{lem:loc_ramification} with $m=p-1,r=2$ gives an $\a$ such that $\a^p=\xi$ in $\OO_{F_\gothp}^\times$. Meaning that $(\lam_p)$ is split in the local extension and hence split in $K/F$ (note: add this lemma explictly somewhere).
+
+    If we instead have $\lam_p^p \parallel (\xi-\a_0^p)$, then pick some element in $ K$ which agrees with $\a_0$ up to $\lam_p^{p+1}$, which we again call $\a_0$ and consider \[\eta= (\sqrt[p]{\xi}-\a_0)/\lam_p\] so that $K=F(\eta)$. Now, if $m_\eta$ is the minimal monic polynomial for $\eta$ then by definition it follows that \[m_\eta(x) \equiv x^p+\left (\a_0^{p-1}p/\lam_p^{p-1} \right )x+ (\a_0^p-\xi)/\lam_p^p \mod \lam_p\]
+
+    So in fact $\eta \in \OO_K$. Now, if we look at $m_\eta'$ we see that $m_\eta'(\eta)$ is coprime to $\lam_p$  and therefore coprime to $\gothd_{K/F}$ (by \ref{lem:diff_ideal_eqn})  and therefore $\lam_p$ is unramified (by \ref{lem:diff_ram}).
+    
+\end{proof}
+
+
+
+\section{Proof of Kummers Lemma}
+Using the above we have the following lemma (from which Kummer's lemma is immediate):
+
 
 \begin{lemma}\label{Kummer_alt}
 Let $u \in F$ with $F=\QQ(\zeta_p)$ be a unit such that \[u \equiv a^p \mod \lam_p^p\] for some $a \in \OO_F$. The either $u = \epsilon^p$ for some $\epsilon \in \OO_F^\times$ or $p$ divides the class number of $F$.
@@ -468,12 +497,10 @@ Let $u \in F$ with $F=\QQ(\zeta_p)$ be a unit such that \[u \equiv a^p \mod \lam
 \end{lemma}
 
 \begin{proof}
-	Assume $u$ is not a $p$-th power. Then let $K=F(\sqrt[p]{u})$  and $\eta \in K$ be as in \ref{lem:HilbertNot90}. Then $K/F$ is Galois and cyclic of degree $p$. Not by Hilbert 90 (\ref{Hilbert90})  we can find $\beta \in \OO_K$ such that \[\eta = \beta/\sigma(\beta)\] (but note that by our assumption $\beta$ is not a unit). Note that the ideal $(\eta)$ is invariant under $\Gal(K/F)$ by construction and by \ref{lem:ramification_lem} it cannot be ramified, therefore $(\beta)$ is the extension of scalars of some ideal $\gothb$ in $\OO_F$. Now if $\gothb$ is principal generated by some $\gamma$ then $\beta=v \gamma$  for some $v \in \OO_K^\times$. But this means that \[\eta = \beta/\sigma(\beta)= v/(\sigma(v)) \cdot \gamma / \sigma(\gamma)=v/\sigma(v)  \] contradicting our assumption coming from \ref{lem:HilbertNot90}. On the other hand, $\gothb^p= N_{K/F}(\beta)$ is principal, meaning $p$ divides the class group of $F$.
-	
-	
-		
-	
+	Assume $u$ is not a $p$-th power. Then let $K=F(\sqrt[p]{u})$  and $\eta \in K$ be as in \ref{lem:Hilbert92}. Then $K/F$ is Galois and cyclic of degree $p$. Now by Hilbert 90 (\ref{Hilbert90})  we can find $\beta \in \OO_K$ such that \[\eta = \beta/\sigma(\beta)\] (but note that by our assumption $\beta$ is not a unit). Note that the ideal $(\eta)$ is invariant under $\Gal(K/F)$ by construction and by \ref{lem:ramification_lem} it cannot be ramified, therefore $(\beta)$ is the extension of scalars of some ideal $\gothb$ in $\OO_F$. Now if $\gothb$ is principal generated by some $\gamma$ then $\beta=v \gamma$  for some $v \in \OO_K^\times$. 
+	But this means that \[\eta = \beta/\sigma(\beta)= v/(\sigma(v)) \cdot \gamma / \sigma(\gamma)=v/\sigma(v)  \] contradicting our assumption coming from \ref{lem:Hilbert92}. On the other hand, $\gothb^p= N_{K/F}(\beta)$ is principal, meaning $p$ divides the class group of $F$ as required.
 	
 \end{proof}
+
 
 
