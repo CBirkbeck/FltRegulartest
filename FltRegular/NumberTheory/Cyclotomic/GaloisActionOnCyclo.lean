@@ -12,8 +12,8 @@ theorem PowerBasis.rat_hom_ext {S S' : Type _} [CommRing S] [hS : Algebra ℚ S]
     [hS' : Algebra ℚ S'] (pb : PowerBasis ℚ S) ⦃f g : S →+* S'⦄ (h : f pb.gen = g pb.gen) : f = g :=
   let f' := f.toRatAlgHom
   let g' := g.toRatAlgHom
-  FunLike.ext f g <| by
-    convert FunLike.ext_iff.mp (pb.algHom_ext (show f' pb.gen = g' pb.gen from h))
+  DFunLike.ext f g <| by
+    convert DFunLike.ext_iff.mp (pb.algHom_ext (show f' pb.gen = g' pb.gen from h))
 
 variable (K : Type _) (p : ℕ+) [Field K] [CharZero K] [IsCyclotomicExtension {p} ℚ K]
 
@@ -71,9 +71,8 @@ theorem embedding_conj (x : K) (φ : K →+* ℂ) : conj (φ x) = φ (galConj K 
   suffices φ (galConj K p ζ) = conj (φ ζ)
     by
     rw [← Function.funext_iff]
-    dsimp only
     congr
-    rw [FunLike.coe_fn_eq]
+    rw [DFunLike.coe_fn_eq]
     apply (hζ.powerBasis ℚ).rat_hom_ext
     exact this.symm
   rw [conj_norm_one, galConj_zeta_runity hζ, map_inv₀]
@@ -90,7 +89,7 @@ variable (p)
 
 --generalize this
 theorem gal_map_mem {x : K} (hx : x ∈ RR) (σ : K →ₐ[ℚ] K) : σ x ∈ RR :=
-  map_isIntegral (σ.restrictScalars ℤ) hx
+  map_isIntegral_int (σ.restrictScalars ℤ) hx
 
 theorem gal_map_mem_subtype (σ : K →ₐ[ℚ] K) (x : RR) : σ x ∈ RR := by simp [gal_map_mem]
 

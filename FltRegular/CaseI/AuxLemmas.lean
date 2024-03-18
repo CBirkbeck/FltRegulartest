@@ -17,8 +17,8 @@ local notation "P" => (⟨p, hpri.pos⟩ : ℕ+)
 local notation "K" => CyclotomicField P ℚ
 
 local notation "R" => 𝓞 K
- 
- 
+
+
 namespace CaseI
 
 theorem two_lt (hp5 : 5 ≤ p) : 2 < p := by linarith
@@ -29,7 +29,7 @@ theorem aux_cong0k₁ {k : Fin p} (hcong : k ≡ -1 [ZMOD p]) :
   k = ⟨p.pred, pred_lt hpri.ne_zero⟩ := by
   refine' Fin.ext _
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
-  suffices : ((k : ℤ) : ZMod p).val = p.pred; simpa
+  suffices ((k : ℤ) : ZMod p).val = p.pred by simpa
   rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
   rw [hcong, cast_neg, Int.cast_one, pred_eq_sub_one]
   haveI : NeZero p := ⟨hpri.ne_zero⟩
@@ -83,7 +83,7 @@ def f0k₂ (a b : ℤ) : ℕ → ℤ := fun x => if x = 0 then a - b else if x =
 theorem aux_cong0k₂ {k : Fin p} (hcong : k ≡ 1 [ZMOD p]) : k = ⟨1, hpri.one_lt⟩ := by
   refine' Fin.ext _
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
-  suffices : ((k : ℤ) : ZMod p).val = 1; simpa
+  suffices ((k : ℤ) : ZMod p).val = 1 by simpa
   rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
   rw [hcong, Int.cast_one]
   haveI : Fact p.Prime := ⟨hpri⟩
@@ -93,11 +93,11 @@ theorem auxf0k₂ (hp5 : 5 ≤ p) (a b : ℤ) : ∃ i : Fin P, f0k₂ a b (i : �
   refine' ⟨⟨2, two_lt hp5⟩, _⟩
   have h1 : ((⟨2, two_lt hp5⟩ : Fin p) : ℕ) ≠ 1 := by
     intro h
-    simp only [Fin.ext_iff, Fin.val_mk] at h
+    simp only [Fin.ext_iff, Fin.val_mk] at h; contradiction
   have hzero : ((⟨2, two_lt hp5⟩ : Fin p) : ℕ) ≠ 0 := by
     intro h
     simp only [Fin.ext_iff, Fin.val_mk] at h
-  simp only [f0k₂, h1, if_false, hzero]
+  simp only [f0k₂, h1, if_false, hzero, one_lt_two.ne']
 
 theorem aux0k₂ {a b : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hζ : IsPrimitiveRoot ζ p) (hab : ¬a ≡ b [ZMOD p])
     {k₁ k₂ : Fin p} (hcong : k₂ ≡ k₁ - 1 [ZMOD p])
@@ -130,7 +130,7 @@ section OnekOne
 theorem aux_cong1k₁ {k : Fin p} (hcong : k ≡ 0 [ZMOD p]) : k = ⟨0, hpri.pos⟩ := by
   refine' Fin.ext _
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
-  suffices : ((k : ℤ) : ZMod p).val = 0; simpa
+  suffices ((k : ℤ) : ZMod p).val = 0 by simpa
   rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
   rw [hcong, Int.cast_zero]
   haveI : Fact p.Prime := ⟨hpri⟩
@@ -157,7 +157,7 @@ theorem aux_cong1k₂ {k : Fin p} (hpri : p.Prime) (hp5 : 5 ≤ p) (hcong : k �
     k = ⟨2, two_lt hp5⟩ := by
   refine' Fin.ext _
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
-  suffices : ((k : ℤ) : ZMod p).val = 2; simpa
+  suffices ((k : ℤ) : ZMod p).val = 2 by simpa
   rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
   rw [hcong]
   simp only [Int.cast_add, algebraMap.coe_one]
@@ -173,12 +173,12 @@ theorem auxf1k₂ (a : ℤ) : ∃ i : Fin P, f1k₂ a (i : ℕ) = 0 := by
   have h2 : ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) ≠ 2 :=
     by
     intro h
-    simp only [Fin.ext_iff, Fin.val_mk] at h
+    simp only [Fin.ext_iff, Fin.val_mk] at h; contradiction
   have hzero : ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) ≠ 0 :=
     by
     intro h
     simp only [Fin.ext_iff, Fin.val_mk] at h
-  simp only [f1k₂, h2, if_false, hzero]
+  simp only [f1k₂, h2, if_false, hzero, one_lt_two.ne]
 
 theorem aux1k₂ {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hζ : IsPrimitiveRoot ζ p)
     (caseI : ¬↑p ∣ a * b * c) {k₁ k₂ : Fin p} (hcong : k₂ ≡ k₁ - 1 [ZMOD p])
@@ -193,8 +193,8 @@ theorem aux1k₂ {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hζ : IsPrimitiveRoot �
   ring_nf at hdiv
   have key : ↑(p : ℤ) ∣ ∑ j in range p, f1k₂ a j • ζ ^ j := by
     rw [Int.cast_ofNat]
-    suffices : ∑ j in range p, f1k₂ a j • ζ ^ j = ↑a - ↑a * ζ ^ 2
-    · rwa [this]
+    suffices ∑ j in range p, f1k₂ a j • ζ ^ j = ↑a - ↑a * ζ ^ 2 by
+      rwa [this]
     simp_rw [f1k₂, ite_smul, sum_ite, filter_filter, ← Ne.def, ne_and_eq_iff_right
       (show 0 ≠ 2 by norm_num), Finset.range_filter_eq]
     simp only [hpri.pos, ite_true, zsmul_eq_mul, sum_singleton, _root_.pow_zero, mul_one, two_lt hp5, neg_smul,

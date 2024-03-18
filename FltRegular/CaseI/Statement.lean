@@ -19,14 +19,12 @@ namespace CaseI
 
 /-- Statement of case I with additional assumptions. -/
 def SlightlyEasier : Prop :=
-  ∀ ⦃a b c : ℤ⦄ {p : ℕ} [hpri : Fact p.Prime] (_ : @IsRegularPrime p hpri) (_ : 5 ≤ p)
-    (_ : ({a, b, c} : Finset ℤ).gcd id = 1) (_ : ¬a ≡ b [ZMOD p]) (_ : ¬↑p ∣ a * b * c),
-    a ^ p + b ^ p ≠ c ^ p
+  ∀ ⦃a b c : ℤ⦄ {p : ℕ} [Fact p.Prime], IsRegularPrime p → 5 ≤ p →
+    ({a, b, c} : Finset ℤ).gcd id = 1 → ¬a ≡ b [ZMOD p] → ¬↑p ∣ a * b * c → a ^ p + b ^ p ≠ c ^ p
 
 /-- Statement of case I. -/
 def Statement : Prop :=
-  ∀ ⦃a b c : ℤ⦄ {p : ℕ} [hpri : Fact p.Prime] (_ : @IsRegularPrime p hpri)
-    (_ : ¬↑p ∣ a * b * c), a ^ p + b ^ p ≠ c ^ p
+  ∀ ⦃a b c : ℤ⦄ {p : ℕ} [Fact p.Prime], IsRegularPrime p → ¬↑p ∣ a * b * c → a ^ p + b ^ p ≠ c ^ p
 
 theorem may_assume : SlightlyEasier → Statement := by
   intro Heasy
@@ -45,13 +43,13 @@ theorem may_assume : SlightlyEasier → Statement := by
     intro h
     simp [h] at hI
   have hp5 : 5 ≤ p := by
-    by_contra' habs
+    by_contra! habs
     have : p ∈ Finset.Ioo 2 5 :=
-     (Finset.mem_Ioo).2 ⟨Nat.lt_of_le_and_ne hpri.out.two_le hodd.symm, by linarith⟩
+      (Finset.mem_Ioo).2 ⟨Nat.lt_of_le_of_ne hpri.out.two_le hodd.symm, by linarith⟩
     fin_cases this
     · exact MayAssume.p_ne_three hprod H rfl
     · rw [show 2 + 1 + 1 = 2 * 2 from rfl] at hpri
-      refine' Nat.not_prime_mul one_lt_two one_lt_two hpri.out
+      refine' Nat.not_prime_mul one_lt_two.ne' one_lt_two.ne' hpri.out
   rcases MayAssume.coprime H hprod with ⟨Hxyz, hunit, hprodxyx⟩
   let d := ({a, b, c} : Finset ℤ).gcd id
   have hdiv : ¬↑p ∣ a / d * (b / d) * (c / d) :=
@@ -73,15 +71,15 @@ end CaseI
 theorem ab_coprime {a b c : ℤ} (H : a ^ p + b ^ p = c ^ p) (hpzero : p ≠ 0)
     (hgcd : ({a, b, c} : Finset ℤ).gcd id = 1) : IsCoprime a b := by
   rw [← gcd_eq_one_iff_coprime]
-  by_contra' h
+  by_contra! h
   obtain ⟨q, hqpri, hq⟩ := exists_prime_and_dvd h
   replace hqpri : Prime (q : ℤ) := prime_iff_natAbs_prime.2 (by simp [hqpri])
   obtain ⟨n, hn⟩ := hq
   have haq : ↑q ∣ a := by
-    obtain ⟨m, hm⟩ := Int.gcd_dvd_left a b
+    obtain ⟨m, hm⟩ := @Int.gcd_dvd_left a b
     exact ⟨n * m, by rw [hm, hn]; simp [mul_assoc]⟩
   have hbq : ↑q ∣ b := by
-    obtain ⟨m, hm⟩ := Int.gcd_dvd_right a b
+    obtain ⟨m, hm⟩ := @Int.gcd_dvd_right a b
     exact ⟨n * m, by rw [hm, hn]; simp [mul_assoc]⟩
   have hcq : ↑q ∣ c := by
     suffices ↑q ∣ c ^ p by exact hqpri.dvd_of_dvd_pow this
@@ -97,7 +95,7 @@ theorem ab_coprime {a b c : ℤ} (H : a ^ p + b ^ p = c ^ p) (hpzero : p ≠ 0)
 variable (p)
 
 /-
-These instances are related to the problem described in 
+These instances are related to the problem described in
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/slowness.20in.20ring.20theory.20file
 -/
 instance foo1 : @IsDomain (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ))
@@ -133,27 +131,13 @@ theorem exists_ideal {a b c : ℤ} (h5p : 5 ≤ p) (H : a ^ p + b ^ p = c ^ p)
   simp only [eq_intCast, Int.cast_add, Int.cast_pow] at H₁
   have hζ' := (zeta_spec P ℚ K).unit'_coe
   rw [pow_add_pow_eq_prod_add_zeta_runity_mul
-    (hpri.out.eq_two_or_odd.resolve_left fun h => by simp [h] at h5p ) hζ'] at H₁
+    (hpri.out.eq_two_or_odd.resolve_left fun h => by simp [h] at h5p) hζ'] at H₁
   replace H₁ := congr_arg (fun x => span ({ x } : Set R)) H₁
   simp only [← prod_span_singleton, ← span_singleton_pow] at H₁
   refine' Finset.exists_eq_pow_of_mul_eq_pow_of_coprime (fun η₁ hη₁ η₂ hη₂ hη => ?_) H₁ ζ hζ
   refine' fltIdeals_coprime _ _ H (ab_coprime H hpri.out.ne_zero hgcd) hη₁ hη₂ hη caseI
   · exact hpri.out
   · exact h5p
-
-theorem IsPrincipal_of_IsPrincipal_pow_of_Coprime
-  (A : Type*) [CommRing A] [IsDedekindDomain A] [Fintype (ClassGroup A)]
-  (H : p.Coprime <| Fintype.card <| ClassGroup A) (I : Ideal A)
-  (hI : (I ^ p).IsPrincipal) : I.IsPrincipal := by
-  by_cases Izero : I = 0
-  · rw [Izero]
-    exact bot_isPrincipal
-  rw [← ClassGroup.mk0_eq_one_iff (mem_nonZeroDivisors_of_ne_zero _)] at hI ⊢
-  swap; · exact Izero
-  swap; · exact pow_ne_zero p Izero
-  rw [← orderOf_eq_one_iff, ← Nat.dvd_one, ← H, Nat.dvd_gcd_iff]
-  refine ⟨?_, orderOf_dvd_card_univ⟩
-  rwa [orderOf_dvd_iff_pow_eq_one, ← map_pow, SubmonoidClass.mk_pow]
 
 theorem is_principal_aux (K' : Type*) [Field K'] [CharZero K'] [IsCyclotomicExtension {P} ℚ K']
   [Fintype (ClassGroup (𝓞 K'))]
@@ -162,7 +146,7 @@ theorem is_principal_aux (K' : Type*) [Field K'] [CharZero K'] [IsCyclotomicExte
   ∃ (u : (𝓞 K')ˣ) (α : 𝓞 K'), ↑u * α ^ p = ↑a + ζ * ↑b := by
   letI : NumberField K' := IsCyclotomicExtension.numberField { P } ℚ K'
   obtain ⟨α, hα⟩ : I.IsPrincipal := by
-    apply IsPrincipal_of_IsPrincipal_pow_of_Coprime (𝓞 K') hreg I
+    apply IsPrincipal_of_IsPrincipal_pow_of_Coprime (𝓞 K') _ hreg I
     constructor
     use ↑a + ζ * ↑b
     rw [submodule_span_eq, hI]
@@ -184,6 +168,7 @@ theorem is_principal {a b c : ℤ} {ζ : R} (hreg : IsRegularPrime p) (hp5 : 5 �
   · rwa [IsRegularPrime, IsRegularNumber] at hreg
   · exact hI
 
+set_option maxHeartbeats 400000 in
 theorem ex_fin_div {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hreg : IsRegularPrime p)
     (hζ : IsPrimitiveRoot ζ p) (hgcd : ({a, b, c} : Finset ℤ).gcd id = 1) (caseI : ¬↑p ∣ a * b * c)
     (H : a ^ p + b ^ p = c ^ p) :
@@ -196,10 +181,10 @@ theorem ex_fin_div {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hreg : IsRegularPrime
     intro hP
     rw [← PNat.coe_inj, PNat.mk_coe] at hP
     rw [hP] at hp5
-    simp at hp5
+    contradiction
   haveI := (⟨hpri.out⟩ : Fact (P : ℕ).Prime)
   obtain ⟨u, α, hu⟩ := is_principal hreg hp5 hgcd caseI H hζ
-  rw [h, mul_comm _ (↑b : 𝓞 _), ← pow_one hζ'.unit'] at hu
+  rw [h, mul_comm _ (↑b : R), ← pow_one hζ'.unit'] at hu
   obtain ⟨k, hk⟩ := FltRegular.CaseI.exists_int_sum_eq_zero hζ' hP hpri.out a b 1 hu.symm
   simp only [zpow_one, zpow_neg, PNat.mk_coe, mem_span_singleton, ← h] at hk
   have hpcoe : (p : ℤ) ≠ 0 := by simp [hpri.out.ne_zero]
@@ -213,21 +198,20 @@ theorem ex_fin_div {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hreg : IsRegularPrime
       ZMod.int_cast_mod, Int.cast_sub, Int.cast_mul, int_cast_ofNat, Int.cast_one]
   simp only [add_sub_assoc, sub_sub] at hk ⊢
   convert hk using 3
-  rw [mul_add, mul_comm (↑a : 𝓞 _), ← mul_assoc _ (↑b : 𝓞 _), mul_comm _ (↑b : 𝓞 _),
-    mul_assoc (↑b : 𝓞 _)]
+  rw [mul_add, mul_comm (↑a : R), ← mul_assoc _ (↑b : R), mul_comm _ (↑b : R), mul_assoc (↑b : R)]
   congr 2
   · rw [← Subtype.coe_inj]
-    simp only [Fin.val_mk, SubsemiringClass.coe_pow, _root_.coe_zpow',
+    simp only [Fin.val_mk, SubsemiringClass.coe_pow, NumberField.Units.coe_zpow,
       IsPrimitiveRoot.coe_unit'_coe]
     refine' eq_of_div_eq_one _
-    rw [← zpow_ofNat, ← zpow_sub₀ (hζ'.ne_zero hpri.out.ne_zero), hζ'.zpow_eq_one_iff_dvd]
+    rw [← zpow_coe_nat, ← zpow_sub₀ (hζ'.ne_zero hpri.out.ne_zero), hζ'.zpow_eq_one_iff_dvd]
     simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.int_cast_zmod_eq_zero_iff_dvd,
       Int.cast_sub, ZMod.int_cast_mod, Int.cast_mul, int_cast_ofNat, sub_self]
   · rw [← Subtype.coe_inj]
-    simp only [Fin.val_mk, SubsemiringClass.coe_pow, MulMemClass.coe_mul, _root_.coe_zpow',
-      IsPrimitiveRoot.coe_unit'_coe, IsPrimitiveRoot.coe_inv_unit'_coe]
+    simp only [Fin.val_mk, SubsemiringClass.coe_pow, MulMemClass.coe_mul,
+      NumberField.Units.coe_zpow, IsPrimitiveRoot.coe_unit'_coe, IsPrimitiveRoot.coe_inv_unit'_coe]
     refine' eq_of_div_eq_one _
-    rw [← zpow_ofNat, ← zpow_sub_one₀ (hζ'.ne_zero hpri.out.ne_zero), ←
+    rw [← zpow_coe_nat, ← zpow_sub_one₀ (hζ'.ne_zero hpri.out.ne_zero), ←
       zpow_sub₀ (hζ'.ne_zero hpri.out.ne_zero), hζ'.zpow_eq_one_iff_dvd]
     simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.int_cast_zmod_eq_zero_iff_dvd,
       Int.cast_sub, ZMod.int_cast_mod, Int.cast_mul, int_cast_ofNat, Int.cast_one, sub_self]
@@ -249,15 +233,15 @@ theorem auxf' (hp5 : 5 ≤ p) (a b : ℤ) (k₁ k₂ : Fin p) :
     ⟨mem_range.2 h1, insert_subset_iff.2 ⟨mem_range.2 (Fin.is_lt _),
     singleton_subset_iff.2 (mem_range.2 (Fin.is_lt _))⟩⟩⟩
   have hcard := card_sdiff hs
-  replace hcard : (range p \ s).Nonempty
-  · rw [← card_pos, hcard, card_range]
+  replace hcard : (range p \ s).Nonempty := by
+    rw [← Finset.card_pos, hcard, card_range]
     exact Nat.sub_pos_of_lt (lt_of_lt_of_le this hp5)
   obtain ⟨i, hi⟩ := hcard
   refine' ⟨i, sdiff_subset _ _ hi, _⟩
-  have hi0 : i ≠ 0 := fun h => by simp [h] at hi
-  have hi1 : i ≠ 1 := fun h => by simp [h] at hi
-  have hik₁ : i ≠ k₁ := fun h => by simp [h] at hi
-  have hik₂ : i ≠ k₂ := fun h => by simp [h] at hi
+  have hi0 : i ≠ 0 := fun h => by simp [h, s] at hi
+  have hi1 : i ≠ 1 := fun h => by simp [h, s] at hi
+  have hik₁ : i ≠ k₁ := fun h => by simp [h, s] at hi
+  have hik₂ : i ≠ k₂ := fun h => by simp [h, s] at hi
   simp [f, hi0, hi1, hik₁, hik₂]
 
 theorem auxf (hp5 : 5 ≤ p) (a b : ℤ) (k₁ k₂ : Fin p) : ∃ i : Fin p, f a b k₁ k₂ (i : ℕ) = 0 :=

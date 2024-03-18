@@ -3,7 +3,6 @@ import FltRegular.NumberTheory.Cyclotomic.GaloisActionOnCyclo
 import Mathlib.NumberTheory.Cyclotomic.Rat
 import FltRegular.NumberTheory.Cyclotomic.UnitLemmas
 import Mathlib.RingTheory.DedekindDomain.Ideal
-import FltRegular.NumberTheory.Cyclotomic.ZetaSubOnePrime
 import FltRegular.NumberTheory.Cyclotomic.CyclotomicUnits
 import Mathlib.Algebra.CharP.Quotient
 
@@ -20,6 +19,8 @@ section IntFacts
 noncomputable section
 
 open scoped NumberField BigOperators
+
+instance {K : Type*} [Field K] : Module (𝓞 K) (𝓞 K) := Semiring.toModule
 
 open Ideal IsCyclotomicExtension
 
@@ -173,8 +174,7 @@ theorem prim_coe (ζ : R) (hζ : IsPrimitiveRoot ζ p) : IsPrimitiveRoot (ζ : C
 
 theorem zeta_sub_one_dvb_p [Fact (p : ℕ).Prime] (ph : 5 ≤ p) {η : R} (hη : η ∈ nthRootsFinset p R)
     (hne1 : η ≠ 1) : 1 - η ∣ (p : R) := by
-  have h00 : 1 - η ∣ (p : R) ↔ η - 1 ∣ (p : R) :=
-    by
+  have h00 : 1 - η ∣ (p : R) ↔ η - 1 ∣ (p : R) :=  by
     have hh : -(η - 1) = 1 - η := by ring
     simp_rw [← hh]
     apply neg_dvd
@@ -184,32 +184,25 @@ theorem zeta_sub_one_dvb_p [Fact (p : ℕ).Prime] (ph : 5 ≤ p) {η : R} (hη :
   have h0 : p ≠ 2 := by
     intro hP
     rw [hP] at ph
-    simp at ph
+    contradiction
   have h := RingOfIntegers.dvd_norm ℚ (η - 1 : R)
   have h2 := IsPrimitiveRoot.sub_one_norm_prime this (cyclotomic.irreducible_rat p.2) h0
   convert h
   ext
   rw [RingOfIntegers.coe_algebraMap_norm]
   norm_cast at h2
-  simp [h2]
+  rw [h2]
+  simp
 
-theorem one_sub_zeta_prime [Fact (p : ℕ).Prime] (ph : 5 ≤ p) {η : R} (hη : η ∈ nthRootsFinset p R)
+theorem one_sub_zeta_prime [Fact (p : ℕ).Prime] {η : R} (hη : η ∈ nthRootsFinset p R)
     (hne1 : η ≠ 1) : Prime (1 - η) := by
-  replace ph : p ≠ 2
-  · intro h
-    rw [h] at ph
-    simp at ph
   have h := prim_coe η (nth_roots_prim hη hne1)
-  have := Rat.zeta_sub_one_prime' h ph
-  have H :
-    (⟨η - 1, Subalgebra.sub_mem _ (h.isIntegral p.pos) (Subalgebra.one_mem _)⟩ : R) = η - 1 := rfl
-  rw [H] at this
-  simpa using this.neg
+  simpa using h.zeta_sub_one_prime'.neg
 
 theorem diff_of_roots [hp : Fact (p : ℕ).Prime] (ph : 5 ≤ p) {η₁ η₂ : R}
     (hη₁ : η₁ ∈ nthRootsFinset p R) (hη₂ : η₂ ∈ nthRootsFinset p R) (hdiff : η₁ ≠ η₂)
     (hwlog : η₁ ≠ 1) : ∃ u : Rˣ, η₁ - η₂ = u * (1 - η₁) := by
-  replace ph : 2 ≤ p := le_trans (by norm_num) ph
+  replace ph : 2 ≤ p := le_trans (by decide) ph
   have h := nth_roots_prim hη₁ hwlog
   obtain ⟨i, ⟨H, hi⟩⟩ := h.eq_pow_of_pow_eq_one ((mem_nthRootsFinset hp.out.pos).1 hη₂) hp.out.pos
   have hi1 : 1 ≠ i := by
@@ -230,12 +223,10 @@ theorem diff_of_roots2 [Fact (p : ℕ).Prime] (ph : 5 ≤ p) {η₁ η₂ : R} (
   rw [Units.val_neg, neg_mul, ← hu]
   ring
 
-instance arg : IsDedekindDomain R :=
-  inferInstance
-
 instance : AddCommGroup R := AddCommGroupWithOne.toAddCommGroup
-instance : AddCommMonoid R := AddCommGroup.toAddCommMonoid
 
+set_option maxHeartbeats 300000 in
+set_option synthInstance.maxHeartbeats 80000 in
 lemma fltIdeals_coprime2_lemma [Fact (p : ℕ).Prime] (ph : 5 ≤ p) {x y : ℤ} {η₁ η₂ : R}
     (hη₁ : η₁ ∈ nthRootsFinset p R)
     (hη₂ : η₂ ∈ nthRootsFinset p R) (hdiff : η₁ ≠ η₂) (hp : IsCoprime x y)
@@ -282,7 +273,7 @@ lemma fltIdeals_coprime2_lemma [Fact (p : ℕ).Prime] (ph : 5 ≤ p) {x y : ℤ}
     have eta_sub_one_ne_zero := sub_ne_zero.mpr (Ne.symm hwlog)
     have hηprime : IsPrime (Ideal.span ({1 - η₁} : Set R)) := by
       rw [span_singleton_prime eta_sub_one_ne_zero]
-      apply one_sub_zeta_prime ph hη₁ hwlog
+      apply one_sub_zeta_prime hη₁ hwlog
     have H5 : IsPrime (Ideal.span ({(p : ℤ)} : Set ℤ)) := by
       have h2 : (p : ℤ) ≠ 0 := by simp
       have h1 : Prime (p : ℤ) := by
@@ -306,7 +297,7 @@ lemma fltIdeals_coprime2_lemma [Fact (p : ℕ).Prime] (ph : 5 ≤ p) {x y : ℤ}
         rw [span_singleton_le_span_singleton]
         apply zeta_sub_one_dvb_p ph hη₁ hwlog
       have H2 : IsPrime (P.comap (Int.castRingHom R)) := by
-        apply @IsPrime.comap _ _ _ _ _ _ _ _ hPrime
+        exact IsPrime.comap _
       have H4 : Ideal.span ({(p : ℤ)} : Set ℤ) ≠ ⊥ := by simp
       apply ((@Ring.DimensionLeOne.prime_le_prime_iff_eq _ _ _ _ _ H5 H2 H4).1 H1).symm
     have hxyinP : (x + y : R) ∈ P := by
@@ -395,7 +386,7 @@ theorem dvd_last_coeff_cycl_integer [hp : Fact (p : ℕ).Prime] {ζ : 𝓞 L}
   by_cases H : i = ⟨(p : ℕ).pred, pred_lt hp.out.ne_zero⟩
   · simp [H.symm, Hi]
   have hi : ↑i < (p : ℕ).pred := by
-    by_contra' habs
+    by_contra! habs
     simp [le_antisymm habs (le_pred_of_lt (Fin.is_lt i))] at H
   obtain ⟨y, hy⟩ := hdiv
   rw [← Equiv.sum_comp (Fin.castIso (succ_pred_prime hp.out)).toEquiv, Fin.sum_univ_castSucc] at hy
@@ -409,9 +400,9 @@ theorem dvd_last_coeff_cycl_integer [hp : Fact (p : ℕ).Prime] {ζ : 𝓞 L}
     congr; rfl; ext x
     rw [smul_neg]
     congr; congr; rfl; congr
-    rw [hcoe, ← hζ'.integralPowerBasis'_gen, ← hb]
+    rw [hcoe, ← IsPrimitiveRoot.toInteger, ← hζ'.integralPowerBasis'_gen, ← hb]
     rfl; rfl; congr; congr; rfl; congr
-    rw [hcoe, ← hζ'.integralPowerBasis'_gen, ← hb]
+    rw [hcoe, ← IsPrimitiveRoot.toInteger, ← hζ'.integralPowerBasis'_gen, ← hb]
   conv_lhs at hy =>
     congr; rfl; ext x
     rw [← SubsemiringClass.coe_pow, ← show ∀ y, _ = _ from fun y => congr_fun b.coe_basis y,
@@ -447,7 +438,7 @@ theorem dvd_coeff_cycl_integer (hp : (p : ℕ).Prime) {ζ : 𝓞 L} (hζ : IsPri
   by_cases H : j = ⟨(p : ℕ).pred, pred_lt hp.ne_zero⟩
   · simpa [H] using last_dvd
   have hj : ↑j < (p : ℕ).pred := by
-    by_contra' habs
+    by_contra! habs
     simp [le_antisymm habs (le_pred_of_lt (Fin.is_lt j))] at H
   obtain ⟨y, hy⟩ := hdiv
   rw [← Equiv.sum_comp (Fin.castIso (succ_pred_prime hp)).toEquiv, Fin.sum_univ_castSucc] at hy
@@ -461,9 +452,9 @@ theorem dvd_coeff_cycl_integer (hp : (p : ℕ).Prime) {ζ : 𝓞 L} (hζ : IsPri
     congr; rfl; ext x
     rw [smul_neg]
     congr; congr; rfl; congr
-    rw [hcoe, ← hζ'.integralPowerBasis'_gen, ← hb]
+    rw [hcoe, ← IsPrimitiveRoot.toInteger, ← hζ'.integralPowerBasis'_gen, ← hb]
     rfl; rfl; congr; congr; rfl; congr
-    rw [hcoe, ← hζ'.integralPowerBasis'_gen, ← hb]
+    rw [hcoe, ← IsPrimitiveRoot.toInteger, ← hζ'.integralPowerBasis'_gen, ← hb]
   conv_lhs at hy =>
     congr; rfl; ext x
     rw [← SubsemiringClass.coe_pow, ← show ∀ y, _ = _ from fun y => congr_fun b.coe_basis y,

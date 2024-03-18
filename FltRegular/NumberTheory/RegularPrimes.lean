@@ -31,7 +31,6 @@ but sadly its implementation is so unsafe that using it here creates a lot of di
 We instead put some safe specialised instances here, and we can maybe look at generalising them
 later, when this is needed. Most results from here on genuinely only work for ℚ, so this is
 very fine for the moment. -/
--- todo: now the diamond is fixed, `open_locale cyclotomic` may be fine.
 instance safe {p : ℕ+} : NumberField (CyclotomicField p ℚ) :=
   IsCyclotomicExtension.numberField {p} ℚ <| CyclotomicField p ℚ
 
@@ -49,7 +48,6 @@ variable (n p : ℕ) [Fact p.Prime]
 instance {p : ℕ} [hp : Fact p.Prime] : Fact (0 < p) :=
   ⟨hp.out.pos⟩
 
--- note that this definition can be annoying to work with whilst #14984 isn't merged.
 /-- A natural number `n` is regular if `n` is coprime with the cardinal of the class group -/
 def IsRegularNumber [hn : Fact (0 < n)] : Prop :=
   n.Coprime <| Fintype.card <| ClassGroup (𝓞 <| CyclotomicField ⟨n, hn.out⟩ ℚ)
@@ -81,7 +79,9 @@ def cyclotomicFieldTwoEquiv [IsCyclotomicExtension {2} K L] : L ≃ₐ[K] K := b
     exact
       (IsSplittingField.algEquiv L (cyclotomic 2 K)).trans
         (IsSplittingField.algEquiv K <| cyclotomic 2 K).symm
-  exact ⟨by simpa using @splits_X_sub_C _ _ _ _ (RingHom.id K) (-1), by simp⟩
+  exact ⟨by simpa using @splits_X_sub_C _ _ _ _ (RingHom.id K) (-1),
+    by simp [eq_iff_true_of_subsingleton]⟩
+
 
 instance IsPrincipalIdealRing_of_IsCyclotomicExtension_two
   (L : Type _) [Field L] [CharZero L] [IsCyclotomicExtension {2} ℚ L] :
@@ -113,3 +113,18 @@ theorem isRegularNumber_two : IsRegularNumber 2 := by
   infer_instance
 
 end TwoRegular
+
+theorem IsPrincipal_of_IsPrincipal_pow_of_Coprime
+  (A : Type*) [CommRing A] [IsDedekindDomain A] [Fintype (ClassGroup A)]
+  (p : ℕ) [Fact p.Prime]
+  (H : p.Coprime <| Fintype.card <| ClassGroup A) (I : Ideal A)
+  (hI : (I ^ p).IsPrincipal) : I.IsPrincipal := by
+  by_cases Izero : I = 0
+  · rw [Izero]
+    exact bot_isPrincipal
+  rw [← ClassGroup.mk0_eq_one_iff (mem_nonZeroDivisors_of_ne_zero _)] at hI ⊢
+  swap; · exact Izero
+  swap; · exact pow_ne_zero p Izero
+  rw [← orderOf_eq_one_iff, ← Nat.dvd_one, ← H, Nat.dvd_gcd_iff]
+  refine ⟨?_, orderOf_dvd_card⟩
+  rwa [orderOf_dvd_iff_pow_eq_one, ← map_pow, SubmonoidClass.mk_pow]

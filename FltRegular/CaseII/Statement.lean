@@ -35,7 +35,7 @@ lemma not_exists_solution' :
     ∃ m z', 1 ≤ m ∧ ¬((hζ.unit' : 𝓞 K) - 1 ∣ z') ∧ z = ((hζ.unit' : 𝓞 K) - 1) ^ m * z' := by
     classical
     have H : multiplicity.Finite ((hζ.unit' : 𝓞 K) - 1) z := WfDvdMonoid.multiplicity_finite
-      (M := 𝓞 K) (IsCyclotomicExtension.Rat.zeta_sub_one_prime' hζ hp).not_unit hz'
+      (M := 𝓞 K) hζ.zeta_sub_one_prime'.not_unit hz'
     obtain ⟨z', h⟩ := multiplicity.pow_multiplicity_dvd H
     refine ⟨_, _, ?_, ?_, h⟩
     · rwa [← PartENat.coe_le_coe, PartENat.natCast_get, ← multiplicity.pow_dvd_iff_le_multiplicity,
@@ -55,7 +55,7 @@ lemma not_exists_Int_solution {p : ℕ} [hpri : Fact (Nat.Prime p)] (hreg : IsRe
     ℚ (B := (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ)) (Set.mem_singleton (⟨p, hpri.out.pos⟩ : ℕ+))
   have hodd' : (⟨p, hpri.out.pos⟩ : ℕ+) ≠ (2 : ℕ+) := by
     rwa [← PNat.coe_injective.ne_iff]
-  have := λ n ↦ zeta_sub_one_dvd_Int_iff (K := CyclotomicField ⟨p, hpri.out.pos⟩ ℚ) hζ hodd' (n := n)
+  have := fun n ↦ zeta_sub_one_dvd_Int_iff (K := CyclotomicField ⟨p, hpri.out.pos⟩ ℚ) hζ (n := n)
   simp only [PNat.mk_coe] at this
   simp_rw [← this]
   rintro ⟨x, y, z, hy, hz, hz', e⟩
@@ -93,14 +93,14 @@ theorem caseII {a b c : ℤ} {p : ℕ} [hpri : Fact p.Prime] (hreg : IsRegularPr
   obtain (ha|hb) := (Nat.prime_iff_prime_int.mp hpri.out).dvd_or_dvd hab
   · refine not_exists_Int_solution' hreg hodd ⟨b, -c, -a, ?_, ?_, ?_, ?_⟩
     · simp only [← hgcd, Finset.mem_singleton, Finset.mem_insert, neg_inj, Finset.gcd_insert, id_eq,
-        ← Int.coe_gcd, Int.gcd_neg_left, Nat.cast_inj, ← insert_emptyc_eq, Finset.gcd_empty,
+        ← Int.coe_gcd, Int.neg_gcd, Nat.cast_inj, ← insert_emptyc_eq, Finset.gcd_empty,
         Int.gcd_left_comm _ a]
     · rwa [dvd_neg]
     · rwa [ne_eq, neg_eq_zero]
     · simp [hodd'.neg_pow, ← e]
   · refine not_exists_Int_solution' hreg hodd ⟨-c, a, -b, ?_, ?_, ?_, ?_⟩
     · simp only [← hgcd, Finset.mem_singleton, Finset.mem_insert, neg_inj, Finset.gcd_insert, id_eq,
-        ← Int.coe_gcd, Int.gcd_neg_left, Nat.cast_inj, ← insert_emptyc_eq, Finset.gcd_empty,
+        ← Int.coe_gcd, Int.neg_gcd, Nat.cast_inj, ← insert_emptyc_eq, Finset.gcd_empty,
         Int.gcd_left_comm _ c]
     · rwa [dvd_neg]
     · rwa [ne_eq, neg_eq_zero]
