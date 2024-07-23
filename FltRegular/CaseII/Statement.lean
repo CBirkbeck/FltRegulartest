@@ -10,11 +10,6 @@ variable {ζ : K} (hζ : IsPrimitiveRoot ζ p)
 
 namespace FltRegular
 
-/-- Statement of case II. -/
-def CaseII.Statement : Prop :=
-  ∀ ⦃a b c : ℤ⦄ ⦃p : ℕ⦄ [hp : Fact p.Prime] (_ : @IsRegularPrime p hp) (_ : p ≠ 2)
-    (_ : a * b * c ≠ 0) (_ : ↑p ∣ a * b * c), a ^ p + b ^ p ≠ c ^ p
-
 lemma not_exists_solution (hm : 1 ≤ m) :
   ¬∃ (x' y' z' : 𝓞 K) (ε₃ : (𝓞 K)ˣ),
     ¬((hζ.unit' : 𝓞 K) - 1 ∣ y') ∧ ¬((hζ.unit' : 𝓞 K) - 1 ∣ z') ∧
@@ -42,7 +37,7 @@ lemma not_exists_solution' :
         pow_one]
     · intro h'
       have := mul_dvd_mul_left (((hζ.unit' : 𝓞 K) - 1) ^ Part.get (multiplicity _ z) H) h'
-      rw [← pow_succ', ← h] at this
+      rw [← pow_succ, ← h] at this
       exact multiplicity.is_greatest' H (Nat.lt_succ_self _) this
   refine not_exists_solution hp hreg hζ hm ⟨x, y, z, 1, hy, hz'', ?_⟩
   rwa [Units.val_one, one_mul]
@@ -72,7 +67,7 @@ lemma not_exists_Int_solution' {p : ℕ} [hpri : Fact (Nat.Prime p)] (hreg : IsR
   refine not_exists_Int_solution hreg hodd ⟨x, y, z, ?_, hz, hz', e⟩
   intro hy
   have := dvd_sub (dvd_pow hz hpri.out.ne_zero) (dvd_pow hy hpri.out.ne_zero)
-  rw [← e, add_sub_cancel] at this
+  rw [← e, add_sub_cancel_right] at this
   replace this := (Nat.prime_iff_prime_int.mp hpri.out).dvd_of_dvd_pow this
   apply (Nat.prime_iff_prime_int.mp hpri.out).not_unit
   rw [isUnit_iff_dvd_one, ← hgcd]

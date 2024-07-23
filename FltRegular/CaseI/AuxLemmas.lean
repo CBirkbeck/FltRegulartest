@@ -1,7 +1,5 @@
-import FltRegular.MayAssume.Lemmas
-import FltRegular.NumberTheory.Cyclotomic.Factoring
 import FltRegular.NumberTheory.Cyclotomic.UnitLemmas
-import FltRegular.NumberTheory.Cyclotomic.CaseI
+import FltRegular.NumberTheory.Cyclotomic.CyclRat
 
 open Finset Nat IsCyclotomicExtension Ideal Polynomial Int Basis
 
@@ -27,10 +25,10 @@ section Zerok₁
 
 theorem aux_cong0k₁ {k : Fin p} (hcong : k ≡ -1 [ZMOD p]) :
   k = ⟨p.pred, pred_lt hpri.ne_zero⟩ := by
-  refine' Fin.ext _
+  refine Fin.ext ?_
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
   suffices ((k : ℤ) : ZMod p).val = p.pred by simpa
-  rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
+  rw [← ZMod.intCast_eq_intCast_iff] at hcong
   rw [hcong, cast_neg, Int.cast_one, pred_eq_sub_one]
   haveI : NeZero p := ⟨hpri.ne_zero⟩
   haveI : Fact p.Prime := ⟨hpri⟩
@@ -41,13 +39,13 @@ theorem aux_cong0k₁ {k : Fin p} (hcong : k ≡ -1 [ZMOD p]) :
 def f0k₁ (b : ℤ) (p : ℕ) : ℕ → ℤ := fun x => if x = 1 then b else if x = p.pred then -b else 0
 
 theorem auxf0k₁ (hp5 : 5 ≤ p) (b : ℤ) : ∃ i : Fin P, f0k₁ b p (i : ℕ) = 0 := by
-  refine' ⟨⟨2, two_lt hp5⟩, _⟩
+  refine ⟨⟨2, two_lt hp5⟩, ?_⟩
   have hpred : ((⟨2, two_lt hp5⟩ : Fin p) : ℕ) ≠ p.pred := by
     intro h
     simp only [Fin.ext_iff, Fin.val_mk] at h
     replace h := h.symm
-    rw [Nat.pred_eq_succ_iff] at h
-    linarith
+    rw [Nat.pred_eq_sub_one] at h
+    omega
   simp only [f0k₁, OfNat.ofNat_ne_one, ite_false, ite_eq_right_iff, neg_eq_zero]
   intro h2
   exfalso
@@ -60,16 +58,16 @@ theorem aux0k₁ {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hζ : IsPrimitiveRoot �
   symm
   intro habs
   rw [show (k₁ : ℤ) = 0 by simpa using habs, zero_sub] at hcong
-  rw [habs, _root_.pow_zero, mul_one, add_sub_cancel', aux_cong0k₁ hpri hcong] at hdiv
+  rw [habs, _root_.pow_zero, mul_one, add_sub_cancel_left, aux_cong0k₁ hpri hcong] at hdiv
   nth_rw 1 [show ζ = ζ ^ ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) by simp] at hdiv
   have key : ↑(p : ℤ) ∣ ∑ j in range p, f0k₁ b p j • ζ ^ j := by
     convert hdiv using 1
     have h : 1 ≠ p.pred := fun h => by linarith [pred_eq_succ_iff.1 h.symm]
-    simp_rw [f0k₁, ite_smul, sum_ite, filter_filter, ← Ne.def, ne_and_eq_iff_right h,
+    simp_rw [f0k₁, ite_smul, sum_ite, filter_filter, ← Ne.eq_def, ne_and_eq_iff_right h,
       Finset.range_filter_eq]
-    simp [hpri.one_lt, pred_lt hpri.ne_zero, sub_eq_add_neg]
+    simp [hpri.one_lt, Nat.sub_lt hpri.pos, sub_eq_add_neg]
   rw [sum_range] at key
-  refine' caseI (Dvd.dvd.mul_right (Dvd.dvd.mul_left _ _) _)
+  refine caseI (Dvd.dvd.mul_right (Dvd.dvd.mul_left ?_ _) _)
   replace hpri : (P : ℕ).Prime := hpri
   simpa [f0k₁] using dvd_coeff_cycl_integer hpri hζ (auxf0k₁ hpri hp5 b) key ⟨1, hpri.one_lt⟩
 
@@ -81,16 +79,16 @@ section Zerok₂
 def f0k₂ (a b : ℤ) : ℕ → ℤ := fun x => if x = 0 then a - b else if x = 1 then b - a else 0
 
 theorem aux_cong0k₂ {k : Fin p} (hcong : k ≡ 1 [ZMOD p]) : k = ⟨1, hpri.one_lt⟩ := by
-  refine' Fin.ext _
+  refine Fin.ext ?_
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
   suffices ((k : ℤ) : ZMod p).val = 1 by simpa
-  rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
+  rw [← ZMod.intCast_eq_intCast_iff] at hcong
   rw [hcong, Int.cast_one]
   haveI : Fact p.Prime := ⟨hpri⟩
   simp [ZMod.val_one]
 
 theorem auxf0k₂ (hp5 : 5 ≤ p) (a b : ℤ) : ∃ i : Fin P, f0k₂ a b (i : ℕ) = 0 := by
-  refine' ⟨⟨2, two_lt hp5⟩, _⟩
+  refine ⟨⟨2, two_lt hp5⟩, ?_⟩
   have h1 : ((⟨2, two_lt hp5⟩ : Fin p) : ℕ) ≠ 1 := by
     intro h
     simp only [Fin.ext_iff, Fin.val_mk] at h; contradiction
@@ -106,20 +104,20 @@ theorem aux0k₂ {a b : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hζ : IsPrimitiveRoot ζ 
   symm
   intro habs
   replace hcong := hcong.symm
-  rw [show (k₂ : ℤ) = 0 by simpa using habs, ← ZMod.int_cast_eq_int_cast_iff, Int.cast_sub,
-    Int.cast_zero, sub_eq_zero, ZMod.int_cast_eq_int_cast_iff] at hcong
+  rw [show (k₂ : ℤ) = 0 by simpa using habs, ← ZMod.intCast_eq_intCast_iff, Int.cast_sub,
+    Int.cast_zero, sub_eq_zero, ZMod.intCast_eq_intCast_iff] at hcong
   rw [habs, _root_.pow_zero, mul_one, aux_cong0k₂ hpri hcong, Fin.val_mk, pow_one, add_sub_assoc,
     ← sub_mul, add_sub_right_comm, show ζ = ζ ^ ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) by simp] at hdiv
   have key : ↑(p : ℤ) ∣ ∑ j in range p, f0k₂ a b j • ζ ^ j := by
     convert hdiv using 1
-    simp_rw [f0k₂, ite_smul, sum_ite, filter_filter, ← Ne.def, ne_and_eq_iff_right zero_ne_one,
+    simp_rw [f0k₂, ite_smul, sum_ite, filter_filter, ← Ne.eq_def, ne_and_eq_iff_right zero_ne_one,
       Finset.range_filter_eq]
     simp only [hpri.pos, hpri.one_lt, if_true, zsmul_eq_mul, Int.cast_sub, sum_singleton,
-      _root_.pow_zero, mul_one, pow_one, Ne.def, zero_smul, sum_const_zero, add_zero, Fin.val_mk]
+      _root_.pow_zero, mul_one, pow_one, Ne, zero_smul, sum_const_zero, add_zero, Fin.val_mk]
   rw [sum_range] at key
-  refine' hab _
+  refine hab ?_
   symm
-  rw [← ZMod.int_cast_eq_int_cast_iff, ZMod.int_cast_eq_int_cast_iff_dvd_sub]
+  rw [← ZMod.intCast_eq_intCast_iff, ZMod.intCast_eq_intCast_iff_dvd_sub]
   have hpri₁ : (P : ℕ).Prime := hpri
   simpa [f0k₂] using dvd_coeff_cycl_integer hpri₁ hζ (auxf0k₂ hpri hp5 a b) key ⟨0, hpri.pos⟩
 
@@ -128,10 +126,10 @@ end Zerok₂
 section OnekOne
 
 theorem aux_cong1k₁ {k : Fin p} (hcong : k ≡ 0 [ZMOD p]) : k = ⟨0, hpri.pos⟩ := by
-  refine' Fin.ext _
+  refine Fin.ext ?_
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
   suffices ((k : ℤ) : ZMod p).val = 0 by simpa
-  rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
+  rw [← ZMod.intCast_eq_intCast_iff] at hcong
   rw [hcong, Int.cast_zero]
   haveI : Fact p.Prime := ⟨hpri⟩
   simp
@@ -155,10 +153,10 @@ def f1k₂ (a : ℤ) : ℕ → ℤ := fun x => if x = 0 then a else if x = 2 the
 
 theorem aux_cong1k₂ {k : Fin p} (hpri : p.Prime) (hp5 : 5 ≤ p) (hcong : k ≡ 1 + 1 [ZMOD p]) :
     k = ⟨2, two_lt hp5⟩ := by
-  refine' Fin.ext _
+  refine Fin.ext ?_
   rw [Fin.val_mk, ← ZMod.val_cast_of_lt (Fin.is_lt k)]
   suffices ((k : ℤ) : ZMod p).val = 2 by simpa
-  rw [← ZMod.int_cast_eq_int_cast_iff] at hcong
+  rw [← ZMod.intCast_eq_intCast_iff] at hcong
   rw [hcong]
   simp only [Int.cast_add, algebraMap.coe_one]
   haveI : Fact p.Prime := ⟨hpri⟩
@@ -169,15 +167,9 @@ theorem aux_cong1k₂ {k : Fin p} (hpri : p.Prime) (hp5 : 5 ≤ p) (hcong : k �
   linarith
 
 theorem auxf1k₂ (a : ℤ) : ∃ i : Fin P, f1k₂ a (i : ℕ) = 0 := by
-  refine' ⟨⟨1, hpri.one_lt⟩, _⟩
-  have h2 : ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) ≠ 2 :=
-    by
-    intro h
-    simp only [Fin.ext_iff, Fin.val_mk] at h; contradiction
-  have hzero : ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) ≠ 0 :=
-    by
-    intro h
-    simp only [Fin.ext_iff, Fin.val_mk] at h
+  refine ⟨⟨1, hpri.one_lt⟩, ?_⟩
+  have h2 : ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) ≠ 2 := fun h ↦ by simp at h
+  have hzero : ((⟨1, hpri.one_lt⟩ : Fin p) : ℕ) ≠ 0 := fun h ↦ by simp at h
   simp only [f1k₂, h2, if_false, hzero, one_lt_two.ne]
 
 theorem aux1k₂ {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hζ : IsPrimitiveRoot ζ p)
@@ -187,21 +179,20 @@ theorem aux1k₂ {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hζ : IsPrimitiveRoot �
   symm
   intro habs
   replace hcong := hcong.symm
-  rw [show (k₂ : ℤ) = 1 by simpa using habs, ← ZMod.int_cast_eq_int_cast_iff, Int.cast_sub,
-    sub_eq_iff_eq_add, ← Int.cast_add, ZMod.int_cast_eq_int_cast_iff] at hcong
+  rw [show (k₂ : ℤ) = 1 by simpa using habs, ← ZMod.intCast_eq_intCast_iff, Int.cast_sub,
+    sub_eq_iff_eq_add, ← Int.cast_add, ZMod.intCast_eq_intCast_iff] at hcong
   rw [habs, pow_one, aux_cong1k₂ hpri hp5 hcong] at hdiv
   ring_nf at hdiv
   have key : ↑(p : ℤ) ∣ ∑ j in range p, f1k₂ a j • ζ ^ j := by
-    rw [Int.cast_ofNat]
     suffices ∑ j in range p, f1k₂ a j • ζ ^ j = ↑a - ↑a * ζ ^ 2 by
       rwa [this]
-    simp_rw [f1k₂, ite_smul, sum_ite, filter_filter, ← Ne.def, ne_and_eq_iff_right
+    simp_rw [f1k₂, ite_smul, sum_ite, filter_filter, ← Ne.eq_def, ne_and_eq_iff_right
       (show 0 ≠ 2 by norm_num), Finset.range_filter_eq]
     simp only [hpri.pos, ite_true, zsmul_eq_mul, sum_singleton, _root_.pow_zero, mul_one, two_lt hp5, neg_smul,
   sum_neg_distrib, ne_eq, mem_range, not_and, not_not, zero_smul, sum_const_zero, add_zero]
     ring
   rw [sum_range] at key
-  refine' caseI (Dvd.dvd.mul_right (Dvd.dvd.mul_right _ _) _)
+  refine caseI (Dvd.dvd.mul_right (Dvd.dvd.mul_right ?_ _) _)
   have hpri₁ : (P : ℕ).Prime := hpri
   simpa [f1k₂] using dvd_coeff_cycl_integer hpri₁ hζ (auxf1k₂ hpri a) key ⟨0, hpri.pos⟩
 
@@ -213,7 +204,7 @@ theorem auxk₁k₂ {k₁ k₂ : Fin p} (hpri : p.Prime) (hcong : k₂ ≡ k₁ 
     (k₁ : ℕ) ≠ (k₂ : ℕ) := by
   haveI := (⟨hpri⟩ : Fact p.Prime)
   intro habs
-  rw [habs, ← ZMod.int_cast_eq_int_cast_iff, Int.cast_sub, ← sub_eq_zero] at hcong
+  rw [habs, ← ZMod.intCast_eq_intCast_iff, Int.cast_sub, ← sub_eq_zero] at hcong
   simp at hcong
 
 end KoneKtwo

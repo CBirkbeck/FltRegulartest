@@ -1,4 +1,5 @@
-import Mathlib.LinearAlgebra.FiniteDimensional
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.Dimension.Finite
 import Mathlib.Algebra.Module.Torsion
 import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 import Mathlib.LinearAlgebra.FreeModule.PID
@@ -54,9 +55,9 @@ lemma FiniteDimensional.finrank_add_finrank_quotient_le (N : Submodule R M) :
   apply LinearIndependent.finset_card_le_finrank
   · rw [← LinearIndependent.finset_toSet, Finset.coe_union, Finset.coe_image, Finset.coe_image]
     refine LinearIndependent.union ?_ ?_ H
-    · rw [← linearIndependent_image (Subtype.val_injective.injOn _)]
+    · rw [← linearIndependent_image Subtype.val_injective.injOn]
       exact hs'.map' N.subtype N.ker_subtype
-    · rw [← linearIndependent_image (hf.injective.injOn _)]
+    · rw [← linearIndependent_image hf.injective.injOn]
       apply LinearIndependent.of_comp N.mkQ
       convert ht'
       exact funext fun x => hf _
@@ -181,9 +182,8 @@ lemma FiniteDimensional.exists_of_finrank_lt [IsDomain R] [IsPrincipalIdealRing 
     ∃ m : M, ∀ r : R, r ≠ 0 → r • m ∉ N := by
   obtain ⟨s, hs, hs'⟩ :=
     FiniteDimensional.exists_finset_card_eq_finrank_and_linearIndependent R (M ⧸ N)
-  obtain ⟨v, hv⟩ : s.Nonempty
-  · rwa [Finset.nonempty_iff_ne_empty, ne_eq, ← Finset.card_eq_zero, hs,
-      FiniteDimensional.finrank_quotient, tsub_eq_zero_iff_le, not_le]
+  obtain ⟨v, hv⟩ : s.Nonempty := by rwa [Finset.nonempty_iff_ne_empty, ne_eq, ← Finset.card_eq_zero,
+    hs, FiniteDimensional.finrank_quotient, tsub_eq_zero_iff_le, not_le]
   obtain ⟨v, rfl⟩ := N.mkQ_surjective v
   use v
   intro r hr

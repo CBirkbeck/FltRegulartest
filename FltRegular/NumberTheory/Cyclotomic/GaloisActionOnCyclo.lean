@@ -1,6 +1,5 @@
-import FltRegular.NumberTheory.Cyclotomic.CyclotomicUnits
 import Mathlib.NumberTheory.Cyclotomic.Gal
-import Mathlib.NumberTheory.NumberField.Units
+import Mathlib.NumberTheory.NumberField.Units.Basic
 
 universe u
 
@@ -63,39 +62,31 @@ theorem conj_norm_one (x : ℂ) (h : Complex.abs x = 1) : conj x = x⁻¹ := by
     Complex.exp_neg, map_mul, Complex.conj_I, mul_neg, Complex.conj_ofReal]
 
 @[simp]
-theorem embedding_conj (x : K) (φ : K →+* ℂ) : conj (φ x) = φ (galConj K p x) :=
-  by
-  -- dependent type theory is my favourite
+theorem embedding_conj (x : K) (φ : K →+* ℂ) : conj (φ x) = φ (galConj K p x) := by
   change RingHom.comp conj φ x = (φ.comp <| ↑(galConj K p)) x
   revert x
   suffices φ (galConj K p ζ) = conj (φ ζ)
     by
     rw [← Function.funext_iff]
-    congr
     rw [DFunLike.coe_fn_eq]
     apply (hζ.powerBasis ℚ).rat_hom_ext
     exact this.symm
   rw [conj_norm_one, galConj_zeta_runity hζ, map_inv₀]
-  refine' Complex.norm_eq_one_of_pow_eq_one _ p.ne_zero
-  rw [← map_pow, hζ.pow_eq_one, map_one]
-
--- this proof makes me happy inside
-theorem galConj_idempotent : (galConj K p).trans (galConj K p) = AlgEquiv.refl :=
-  by
-  rw [← AlgEquiv.aut_mul, galConj, ← map_mul, neg_one_mul, neg_neg, map_one]
-  rfl
+  exact Complex.norm_eq_one_of_pow_eq_one (by rw [← map_pow, hζ.pow_eq_one, map_one]) p.ne_zero
 
 variable (p)
 
 --generalize this
-theorem gal_map_mem {x : K} (hx : x ∈ RR) (σ : K →ₐ[ℚ] K) : σ x ∈ RR :=
+theorem gal_map_mem {x : K} (hx : IsIntegral ℤ x) (σ : K →ₐ[ℚ] K) : IsIntegral ℤ (σ x) :=
   map_isIntegral_int (σ.restrictScalars ℤ) hx
 
-theorem gal_map_mem_subtype (σ : K →ₐ[ℚ] K) (x : RR) : σ x ∈ RR := by simp [gal_map_mem]
+theorem gal_map_mem_subtype (σ : K →ₐ[ℚ] K) (x : RR) : IsIntegral ℤ (σ x) :=
+  gal_map_mem x.2 _
 
 /-- Restriction of `σ : K →ₐ[ℚ] K` to the ring of integers.  -/
 def intGal (σ : K →ₐ[ℚ] K) : RR →ₐ[ℤ] RR :=
-  ((σ.restrictScalars ℤ).restrictDomain RR).codRestrict RR (gal_map_mem_subtype σ)
+  ((σ.restrictScalars ℤ).restrictDomain RR).codRestrict (integralClosure ℤ K)
+  (gal_map_mem_subtype σ)
 
 @[simp]
 theorem intGal_apply_coe (σ : K →ₐ[ℚ] K) (x : RR) : (intGal σ x : K) = σ x :=
@@ -111,7 +102,7 @@ variable (K)
 def unitGalConj : RRˣ →* RRˣ :=
   unitsGal (galConj K p)
 
-theorem unitGalConj_spec (u : RRˣ) : galConj K p (u : 𝓞 K) = ↑(unitGalConj K p u : 𝓞 K) := rfl
+theorem unitGalConj_spec (u : RRˣ) : galConj K p u = unitGalConj K p u := rfl
 
 variable {K}
 
@@ -123,6 +114,4 @@ theorem unit_lemma_val_one (u : RRˣ) (φ : K →+* ℂ) :
   simp only [map_inv₀, Complex.abs_conj]
   rw [mul_inv_eq_one₀]
   intro h
-  simp only [_root_.map_eq_zero] at h
-  rw [← Subalgebra.coe_zero (𝓞 K), Subtype.coe_inj] at h
-  exact Units.ne_zero _ h
+  simp at h

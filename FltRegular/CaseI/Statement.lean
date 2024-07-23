@@ -1,4 +1,8 @@
+import FltRegular.MayAssume.Lemmas
+import FltRegular.NumberTheory.Cyclotomic.Factoring
+import FltRegular.NumberTheory.Cyclotomic.CaseI
 import FltRegular.CaseI.AuxLemmas
+import FltRegular.NumberTheory.RegularPrimes
 
 open Finset Nat IsCyclotomicExtension Ideal Polynomial Int Basis FltRegular.CaseI
 
@@ -32,8 +36,7 @@ theorem may_assume : SlightlyEasier → Statement := by
   have hodd : p ≠ 2 := by
     intro h
     rw [h] at H hI
-    refine' hI _
-    refine' Dvd.dvd.mul_left _ _
+    refine hI <| Dvd.dvd.mul_left ?_ _
     simp only [Nat.cast_ofNat] at hI ⊢
     rw [← even_iff_two_dvd, ← Int.odd_iff_not_even] at hI
     rw [← even_iff_two_dvd, ← Int.even_pow' (show 2 ≠ 0 by norm_num), ← H]
@@ -49,7 +52,7 @@ theorem may_assume : SlightlyEasier → Statement := by
     fin_cases this
     · exact MayAssume.p_ne_three hprod H rfl
     · rw [show 2 + 1 + 1 = 2 * 2 from rfl] at hpri
-      refine' Nat.not_prime_mul one_lt_two.ne' one_lt_two.ne' hpri.out
+      exact Nat.not_prime_mul one_lt_two.ne' one_lt_two.ne' hpri.out
   rcases MayAssume.coprime H hprod with ⟨Hxyz, hunit, hprodxyx⟩
   let d := ({a, b, c} : Finset ℤ).gcd id
   have hdiv : ¬↑p ∣ a / d * (b / d) * (c / d) :=
@@ -86,41 +89,11 @@ theorem ab_coprime {a b c : ℤ} (H : a ^ p + b ^ p = c ^ p) (hpzero : p ≠ 0)
     rw [← H]
     exact dvd_add (dvd_pow haq hpzero) (dvd_pow hbq hpzero)
   have Hq : ↑q ∣ ({a, b, c} : Finset ℤ).gcd id := by
-    refine' dvd_gcd fun x hx => _
+    refine dvd_gcd fun x hx ↦ ?_
     simp only [mem_insert, mem_singleton] at hx
     rcases hx with (H | H | H) <;> simpa [H]
   rw [hgcd] at Hq
   exact hqpri.not_unit (isUnit_of_dvd_one Hq)
-
-variable (p)
-
-/-
-These instances are related to the problem described in
-https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/slowness.20in.20ring.20theory.20file
--/
-instance foo1 : @IsDomain (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ))
-  (@CommSemiring.toSemiring _ CommRing.toCommSemiring) :=
-inferInstance
-
-instance foo2 : IsDedekindDomain (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ)) :=
-inferInstance
-
-instance foo3 : @IsDomain (Ideal (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ))) CommSemiring.toSemiring := by
-  convert @Ideal.isDomain (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ)) _ (foo1 p) (foo2 p)
-
-noncomputable
-instance foo4 : @NormalizedGCDMonoid (Ideal (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ)))
-  (@IsDomain.toCancelCommMonoidWithZero _ (@IdemCommSemiring.toCommSemiring _
-    Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule) (foo3 p)) := by
-  convert @Ideal.instNormalizedGCDMonoidIdealToSemiringToCommSemiringCancelCommMonoidWithZero _ _ (foo1 p) (foo2 p)
-
-noncomputable
-instance foo5 : @GCDMonoid (Ideal (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ)))
-  (@IsDomain.toCancelCommMonoidWithZero _ (@IdemCommSemiring.toCommSemiring _
-    Submodule.instIdemCommSemiringSubmoduleToSemiringToAddCommMonoidToNonUnitalNonAssocSemiringToNonAssocSemiringToSemiringToModule) (foo3 p)) := by
-  convert @NormalizedGCDMonoid.toGCDMonoid (Ideal (𝓞 (CyclotomicField ⟨p, hpri.out.pos⟩ ℚ))) _ (foo4 p)
-
-variable {p}
 
 theorem exists_ideal {a b c : ℤ} (h5p : 5 ≤ p) (H : a ^ p + b ^ p = c ^ p)
     (hgcd : ({ a, b, c } : Finset ℤ).gcd id = 1)
@@ -134,8 +107,8 @@ theorem exists_ideal {a b c : ℤ} (h5p : 5 ≤ p) (H : a ^ p + b ^ p = c ^ p)
     (hpri.out.eq_two_or_odd.resolve_left fun h => by simp [h] at h5p) hζ'] at H₁
   replace H₁ := congr_arg (fun x => span ({ x } : Set R)) H₁
   simp only [← prod_span_singleton, ← span_singleton_pow] at H₁
-  refine' Finset.exists_eq_pow_of_mul_eq_pow_of_coprime (fun η₁ hη₁ η₂ hη₂ hη => ?_) H₁ ζ hζ
-  refine' fltIdeals_coprime _ _ H (ab_coprime H hpri.out.ne_zero hgcd) hη₁ hη₂ hη caseI
+  refine exists_eq_pow_of_mul_eq_pow_of_coprime (fun η₁ hη₁ η₂ hη₂ hη => ?_) H₁ ζ hζ
+  refine fltIdeals_coprime ?_ ?_ H (ab_coprime H hpri.out.ne_zero hgcd) hη₁ hη₂ hη caseI
   · exact hpri.out
   · exact h5p
 
@@ -153,7 +126,7 @@ theorem is_principal_aux (K' : Type*) [Field K'] [CharZero K'] [IsCyclotomicExte
   replace hα := congr_arg (fun (J : Submodule _ _) => J ^ p) hα
   simp only [← hI, submodule_span_eq, span_singleton_pow, span_singleton_eq_span_singleton] at hα
   obtain ⟨u, hu⟩ := hα
-  refine' ⟨u⁻¹, α, _⟩
+  refine ⟨u⁻¹, α, ?_⟩
   rw [← hu, mul_comm ((_ + ζ * _)), ← mul_assoc]
   simp only [Units.inv_mul, one_mul]
 
@@ -168,7 +141,6 @@ theorem is_principal {a b c : ℤ} {ζ : R} (hreg : IsRegularPrime p) (hp5 : 5 �
   · rwa [IsRegularPrime, IsRegularNumber] at hreg
   · exact hI
 
-set_option maxHeartbeats 400000 in
 theorem ex_fin_div {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hreg : IsRegularPrime p)
     (hζ : IsPrimitiveRoot ζ p) (hgcd : ({a, b, c} : Finset ℤ).gcd id = 1) (caseI : ¬↑p ∣ a * b * c)
     (H : a ^ p + b ^ p = c ^ p) :
@@ -176,7 +148,7 @@ theorem ex_fin_div {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hreg : IsRegularPrime
       k₂ ≡ k₁ - 1 [ZMOD p] ∧ ↑p ∣ ↑a + ↑b * ζ - ↑a * ζ ^ (k₁ : ℕ) - ↑b * ζ ^ (k₂ : ℕ) := by
   let ζ' := (ζ : K)
   have hζ' : IsPrimitiveRoot ζ' P := IsPrimitiveRoot.coe_submonoidClass_iff.2 hζ
-  have h : ζ = (hζ'.unit' : R) := by simp only [IsPrimitiveRoot.unit', SetLike.eta, Units.val_mk]
+  have h : ζ = (hζ'.unit' : R) := by rfl
   have hP : P ≠ (2 : ℕ+) := by
     intro hP
     rw [← PNat.coe_inj, PNat.mk_coe] at hP
@@ -188,33 +160,31 @@ theorem ex_fin_div {a b c : ℤ} {ζ : R} (hp5 : 5 ≤ p) (hreg : IsRegularPrime
   obtain ⟨k, hk⟩ := FltRegular.CaseI.exists_int_sum_eq_zero hζ' hP hpri.out a b 1 hu.symm
   simp only [zpow_one, zpow_neg, PNat.mk_coe, mem_span_singleton, ← h] at hk
   have hpcoe : (p : ℤ) ≠ 0 := by simp [hpri.out.ne_zero]
-  refine' ⟨⟨(2 * k % p).natAbs, _⟩, ⟨((2 * k - 1) % p).natAbs, _⟩, _, _⟩
+  refine ⟨⟨(2 * k % p).natAbs, ?_⟩, ⟨((2 * k - 1) % p).natAbs, ?_⟩, ?_, ?_⟩
   repeat'
     rw [← natAbs_ofNat p]
-    refine' natAbs_lt_natAbs_of_nonneg_of_lt (emod_nonneg _ hpcoe) _
+    refine natAbs_lt_natAbs_of_nonneg_of_lt (emod_nonneg _ hpcoe) ?_
     rw [natAbs_ofNat]
     exact emod_lt_of_pos _ (by simp [hpri.out.pos])
-  · simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.int_cast_eq_int_cast_iff,
-      ZMod.int_cast_mod, Int.cast_sub, Int.cast_mul, int_cast_ofNat, Int.cast_one]
+  · simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.intCast_eq_intCast_iff,
+      ZMod.intCast_mod, Int.cast_sub, Int.cast_mul, Int.cast_natCast, Int.cast_one]
   simp only [add_sub_assoc, sub_sub] at hk ⊢
   convert hk using 3
   rw [mul_add, mul_comm (↑a : R), ← mul_assoc _ (↑b : R), mul_comm _ (↑b : R), mul_assoc (↑b : R)]
   congr 2
-  · rw [← Subtype.coe_inj]
-    simp only [Fin.val_mk, SubsemiringClass.coe_pow, NumberField.Units.coe_zpow,
-      IsPrimitiveRoot.coe_unit'_coe]
-    refine' eq_of_div_eq_one _
-    rw [← zpow_coe_nat, ← zpow_sub₀ (hζ'.ne_zero hpri.out.ne_zero), hζ'.zpow_eq_one_iff_dvd]
-    simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.int_cast_zmod_eq_zero_iff_dvd,
-      Int.cast_sub, ZMod.int_cast_mod, Int.cast_mul, int_cast_ofNat, sub_self]
-  · rw [← Subtype.coe_inj]
-    simp only [Fin.val_mk, SubsemiringClass.coe_pow, MulMemClass.coe_mul,
-      NumberField.Units.coe_zpow, IsPrimitiveRoot.coe_unit'_coe, IsPrimitiveRoot.coe_inv_unit'_coe]
-    refine' eq_of_div_eq_one _
-    rw [← zpow_coe_nat, ← zpow_sub_one₀ (hζ'.ne_zero hpri.out.ne_zero), ←
+  · ext
+    simp only [Fin.val_mk, map_pow, NumberField.Units.coe_zpow, ← h]
+    refine eq_of_div_eq_one ?_
+    rw [← zpow_natCast, ← zpow_sub₀ (hζ'.ne_zero hpri.out.ne_zero), hζ'.zpow_eq_one_iff_dvd]
+    simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.intCast_zmod_eq_zero_iff_dvd,
+      Int.cast_sub, ZMod.intCast_mod, Int.cast_mul, Int.cast_natCast, sub_self]
+  · ext
+    simp only [Fin.val_mk, map_pow, _root_.map_mul, NumberField.Units.coe_zpow, map_units_inv, ← h]
+    refine eq_of_div_eq_one ?_
+    rw [← zpow_natCast, ← zpow_sub_one₀ (hζ'.ne_zero hpri.out.ne_zero), ←
       zpow_sub₀ (hζ'.ne_zero hpri.out.ne_zero), hζ'.zpow_eq_one_iff_dvd]
-    simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.int_cast_zmod_eq_zero_iff_dvd,
-      Int.cast_sub, ZMod.int_cast_mod, Int.cast_mul, int_cast_ofNat, Int.cast_one, sub_self]
+    simp only [natAbs_of_nonneg (emod_nonneg _ hpcoe), ← ZMod.intCast_zmod_eq_zero_iff_dvd,
+      Int.cast_sub, ZMod.intCast_mod, Int.cast_mul, Int.cast_natCast, Int.cast_one, sub_self]
 
 /-- Auxiliary function -/
 def f (a b : ℤ) (k₁ k₂ : ℕ) : ℕ → ℤ := fun x =>
@@ -226,7 +196,7 @@ theorem auxf' (hp5 : 5 ≤ p) (a b : ℤ) (k₁ k₂ : Fin p) :
   have h1 : 1 < p := by linarith
   let s := ({0, 1, k₁.1, k₂.1} : Finset ℕ)
   have : s.card ≤ 4 := by
-    repeat refine' le_trans (card_insert_le _ _) (succ_le_succ _)
+    repeat refine le_trans (card_insert_le _ _) (succ_le_succ ?_)
     exact rfl.ge
   replace this : s.card < 5 := lt_of_le_of_lt this (by norm_num)
   have hs : s ⊆ range p := insert_subset_iff.2 ⟨mem_range.2 h0, insert_subset_iff.2
@@ -237,7 +207,7 @@ theorem auxf' (hp5 : 5 ≤ p) (a b : ℤ) (k₁ k₂ : Fin p) :
     rw [← Finset.card_pos, hcard, card_range]
     exact Nat.sub_pos_of_lt (lt_of_lt_of_le this hp5)
   obtain ⟨i, hi⟩ := hcard
-  refine' ⟨i, sdiff_subset _ _ hi, _⟩
+  refine ⟨i, sdiff_subset hi, ?_⟩
   have hi0 : i ≠ 0 := fun h => by simp [h, s] at hi
   have hi1 : i ≠ 1 := fun h => by simp [h, s] at hi
   have hik₁ : i ≠ k₁ := fun h => by simp [h, s] at hi
@@ -267,15 +237,15 @@ theorem caseI_easier {a b c : ℤ} (hreg : IsRegularPrime p) (hp5 : 5 ≤ p)
     have h1k₁ := aux1k₁ hpri.out hp5 hζ hab hcong hdiv
     have h1k₂ := aux1k₂ hpri.out hp5 hζ caseI hcong hdiv
     have hk₁k₂ : (k₁ : ℕ) ≠ (k₂ : ℕ) := auxk₁k₂ hpri.out hcong
-    simp_rw [f, ite_smul, sum_ite, filter_filter, ← Ne.def, ne_and_eq_iff_right h01, and_assoc,
+    simp_rw [f, ite_smul, sum_ite, filter_filter, ← Ne.eq_def, ne_and_eq_iff_right h01, and_assoc,
       ne_and_eq_iff_right h1k₁, ne_and_eq_iff_right h0k₁, ne_and_eq_iff_right hk₁k₂,
       ne_and_eq_iff_right h1k₂, ne_and_eq_iff_right h0k₂, Finset.range_filter_eq]
     simp only [hpri.out.pos, hpri.out.one_lt, if_true, zsmul_eq_mul, sum_singleton, _root_.pow_zero,
-      mul_one, pow_one, Fin.is_lt, neg_smul, sum_neg_distrib, Ne.def, zero_smul, sum_const_zero,
+      mul_one, pow_one, Fin.is_lt, neg_smul, sum_neg_distrib, Ne, zero_smul, sum_const_zero,
       add_zero]
     ring
   rw [sum_range] at key
-  refine' caseI (Dvd.dvd.mul_right (Dvd.dvd.mul_right _ _) _)
+  refine caseI (Dvd.dvd.mul_right (Dvd.dvd.mul_right ?_ _) _)
   simpa [f] using dvd_coeff_cycl_integer (by exact hpri.out) hζ (auxf hp5 a b k₁ k₂) key
     ⟨0, hpri.out.pos⟩
 

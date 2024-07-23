@@ -73,7 +73,6 @@ lemma one_sub_zeta_mem_nonZeroDivisors :
 lemma not_isUnit_one_sub_zeta :
     ¬ IsUnit (1 - zeta p) := (prime_one_sub_zeta p).irreducible.1
 
-set_option synthInstance.maxHeartbeats 40000 in
 lemma one_sub_zeta_dvd_int_iff (n : ℤ) : 1 - zeta p ∣ n ↔ ↑p ∣ n := by
   letI p' : ℕ+ := ⟨p, hpri.out.pos⟩
   letI : Fact (PNat.Prime p') := hpri
@@ -91,7 +90,6 @@ lemma isCoprime_one_sub_zeta (n : ℤ) (hn : ¬ (p : ℤ) ∣ n) : IsCoprime (1 
     (algebraMap ℤ <| CyclotomicIntegers p)).of_isCoprime_of_dvd_left
   exact one_sub_zeta_dvd p
 
-set_option synthInstance.maxHeartbeats 80000 in
 lemma exists_dvd_int (n : CyclotomicIntegers p) (hn : n ≠ 0) : ∃ m : ℤ, m ≠ 0 ∧ n ∣ m := by
   refine ⟨Algebra.norm ℤ ((equiv p) n), by simpa, ?_⟩
   rw [← map_dvd_iff (equiv p), map_intCast]
@@ -99,31 +97,11 @@ lemma exists_dvd_int (n : CyclotomicIntegers p) (hn : n ≠ 0) : ∃ m : ℤ, m 
   ext1
   exact DFunLike.congr_arg (algebraMap ℚ _) (Algebra.coe_norm_int (equiv p n))
 
-lemma adjoin_zeta : Algebra.adjoin ℤ {zeta p} = ⊤ := AdjoinRoot.adjoinRoot_eq_top
-
--- def _root_.RingEquiv.toIntAlgEquiv {R S} [Ring R] [Ring S] (e : R ≃+* S) : R ≃ₐ[ℤ] S where
---   __ := e
---   __ := e.toRingHom.toIntAlgHom
-
--- @[simp]
--- def _root_.RingEquiv.toIntAlgEquiv_apply {R S} [Ring R] [Ring S] (e : R ≃+* S) (x) :
---   e.toIntAlgEquiv x = e x := rfl
-
--- @[simp]
--- def _root_.RingEquiv.toIntAlgEquiv_symm_apply {R S} [Ring R] [Ring S] (e : R ≃+* S) (x) :
---   e.toIntAlgEquiv.symm x = e.symm x := rfl
-
 def powerBasis : PowerBasis ℤ (CyclotomicIntegers p) :=
    AdjoinRoot.powerBasis' (cyclotomic.monic _ _)
 
-@[simp]
-lemma powerBasis_gen : (powerBasis p).gen = zeta p := rfl
-
 lemma powerBasis_dim : (powerBasis p).dim = p - 1 := by
   simp [powerBasis, Nat.totient_prime hpri.out, natDegree_cyclotomic]
-
-instance : Module.Finite ℤ (CyclotomicIntegers p) :=
-  Module.Finite.of_basis (powerBasis p).basis
 
 instance : NoZeroSMulDivisors ℤ (CyclotomicIntegers p) := (powerBasis p).basis.noZeroSMulDivisors
 
@@ -135,26 +113,13 @@ lemma nontrivial {p} (hp : p ≠ 0) : Nontrivial (CyclotomicIntegers p) := by
   intro h
   have := natDegree_eq_zero_of_isUnit h
   rw [natDegree_cyclotomic] at this
-  exact this.not_gt (p.totient_pos (Nat.pos_iff_ne_zero.mpr hp))
+  exact this.not_gt (Nat.totient_pos.2 <| Nat.zero_lt_of_ne_zero hp)
 
 lemma charZero {p} (hp : p ≠ 0) : CharZero (CyclotomicIntegers p) :=
   letI := nontrivial hp
   ⟨(NoZeroSMulDivisors.algebraMap_injective _ _).comp (algebraMap ℕ ℤ).injective_nat⟩
 
 instance : CharZero (CyclotomicIntegers p) := charZero hpri.out.ne_zero
-
-open BigOperators
-
-lemma sum_zeta_pow : ∑ i in Finset.range p, zeta p ^ (i : ℕ) = 0 := by
-  rw [← AdjoinRoot.aeval_root (Polynomial.cyclotomic p ℤ), ← zeta]
-  simp [Polynomial.cyclotomic_prime ℤ p]
-
-lemma zeta_pow_sub_one :
-    zeta p ^ (p - 1 : ℕ) = - ∑ i : Fin (p - 1), zeta p ^ (i : ℕ) := by
-  rw [eq_neg_iff_add_eq_zero]
-  convert CyclotomicIntegers.sum_zeta_pow p
-  conv_rhs => enter [1]; rw [← tsub_add_cancel_of_le hpri.out.one_lt.le]
-  rw [Finset.sum_range_succ, add_comm, Fin.sum_univ_eq_sum_range]
 
 end CyclotomicIntegers
 end

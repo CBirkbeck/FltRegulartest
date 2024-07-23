@@ -22,8 +22,8 @@ open BigOperators UniqueFactorizationMonoid
 attribute [local instance] FractionRing.liftAlgebra FractionRing.isScalarTower_liftAlgebra
 
 variable (R K L S : Type*) [CommRing R] [CommRing S] [Algebra R S] [Field K] [Field L]
-    [IsDedekindDomain R] [Algebra R K] [IsFractionRing R K] [Algebra S L] -- [IsFractionRing S L]
-    [Algebra K L] [Algebra R L] [IsScalarTower R S L] [IsScalarTower R K L] -- [IsNoetherian R S]
+    [IsDedekindDomain R] [Algebra R K] [IsFractionRing R K] [Algebra S L]
+    [Algebra K L] [Algebra R L] [IsScalarTower R S L] [IsScalarTower R K L]
     [IsIntegralClosure S R L] [FiniteDimensional K L]
 
 def IsUnramifiedAt {R} (S : Type*) [CommRing R] [CommRing S] [Algebra R S] (p : Ideal R) : Prop :=
@@ -65,12 +65,11 @@ lemma comap_map_eq_of_isUnramified [IsGalois K L] [IsUnramified R S] (I : Ideal 
   have := NoZeroSMulDivisors.iff_algebraMap_injective.mpr hRS
   by_cases hIbot : I = ⊥
   · rw [hIbot, Ideal.comap_bot_of_injective _ hRS, Ideal.map_bot]
-  have hIbot' : I.comap (algebraMap R S) ≠ ⊥ := mt (Ideal.eq_bot_of_comap_eq_bot
-    (IsIntegralClosure.isIntegral_algebra R L)) hIbot
+  have h1 : Algebra.IsIntegral R S := IsIntegralClosure.isIntegral_algebra R L
+  have hIbot' : I.comap (algebraMap R S) ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot hIbot
   have : ∀ p, (p.IsPrime ∧ I.comap (algebraMap R S) ≤ p) → ∃ P ≥ I, P ∈ primesOver S p := by
     intro p ⟨hp₁, hp₂⟩
-    exact Ideal.exists_ideal_over_prime_of_isIntegral
-      (IsIntegralClosure.isIntegral_algebra R L) _ _ hp₂
+    exact Ideal.exists_ideal_over_prime_of_isIntegral _ _ hp₂
   choose 𝔓 h𝔓 h𝔓' using this
   suffices I = ∏ p in (factors (I.comap <| algebraMap R S)).toFinset,
     (p.map (algebraMap R S)) ^ (if h : _ then (factors I).count (𝔓 p h) else 0) by
@@ -156,16 +155,17 @@ lemma isUnramifiedAt_iff_SquareFree_minpoly [NoZeroSMulDivisors R S] [IsDedekind
       this hpbot hx hx').symm.injective
 
 lemma isUnramifiedAt_iff_SquareFree_minpoly_powerBasis [NoZeroSMulDivisors R S] [IsDedekindDomain S]
-    (hRS : Algebra.IsIntegral R S) (pb : PowerBasis R S)
+    [Algebra.IsIntegral R S] (pb : PowerBasis R S)
     (p : Ideal R) [p.IsPrime] (hpbot : p ≠ ⊥) :
     IsUnramifiedAt S p ↔ Squarefree ((minpoly R pb.gen).map (Ideal.Quotient.mk p)) := by
-  rw [isUnramifiedAt_iff_SquareFree_minpoly p hpbot pb.gen _ (hRS _)]
+  rw [isUnramifiedAt_iff_SquareFree_minpoly p hpbot pb.gen _ _]
   rw [conductor_eq_top_of_powerBasis, Ideal.comap_top, top_sup_eq]
+  exact PowerBasis.isIntegral_gen pb
 
 open nonZeroDivisors Polynomial
 
 attribute [local instance] Ideal.Quotient.field in
-lemma isUnramifiedAt_of_Separable_minpoly' [IsSeparable K L]
+lemma isUnramifiedAt_of_Separable_minpoly' [Algebra.IsSeparable K L]
     (p : Ideal R) [hp : p.IsPrime] (hpbot : p ≠ ⊥) (x : S)
     (hx' : Algebra.adjoin K {algebraMap S L x} = ⊤)
     (h : Polynomial.Separable ((minpoly R x).map (Ideal.Quotient.mk p))) :
@@ -191,10 +191,11 @@ lemma isUnramifiedAt_of_Separable_minpoly' [IsSeparable K L]
       AlgEquiv.coe_ringEquiv, Function.comp_apply, AlgEquiv.commutes,
       ← IsScalarTower.algebraMap_apply]
     rw [IsScalarTower.algebraMap_apply R S L, AlgEquiv.commutes, ← IsScalarTower.algebraMap_apply]
-  have : IsSeparable (FractionRing R) (FractionRing S) := IsSeparable.of_equiv_equiv _ _ H
+  have : Algebra.IsSeparable (FractionRing R) (FractionRing S) :=
+    Algebra.IsSeparable.of_equiv_equiv _ _ H
   have := hp.isMaximal hpbot
-
   intro P hP
+  letI : IsScalarTower S (S ⧸ P) (S ⧸ P) := IsScalarTower.right
   have := isMaximal_of_mem_primesOver hpbot hP
   apply le_antisymm
   · rw [← tsub_eq_zero_iff_le]
@@ -211,17 +212,16 @@ lemma isUnramifiedAt_of_Separable_minpoly' [IsSeparable K L]
     rw [map_map, Ideal.quotientMap_comp_mk] at this
     obtain ⟨a, b, e⟩ := this
     apply_fun (aeval (Ideal.Quotient.mk P x)) at e
-    simp only [← Ideal.Quotient.algebraMap_eq, ← map_map, derivative_map, map_add, map_mul,
-      aeval_map_algebraMap, aeval_algebraMap_apply, minpoly.aeval, map_zero, mul_zero, hxP,
-      zero_add, coe_aeval_eq_eval, eval_one] at e
-    exact zero_ne_one e
+    simp_rw [← Ideal.Quotient.algebraMap_eq, ← map_map, derivative_map, map_add, map_mul,
+      aeval_map_algebraMap, aeval_algebraMap_apply, minpoly.aeval, hxP, map_zero, mul_zero,
+      zero_add, map_one, zero_ne_one] at e
   · rwa [Ideal.IsDedekindDomain.ramificationIdx_eq_factors_count _
       (isMaximal_of_mem_primesOver hpbot hP).isPrime (ne_bot_of_mem_primesOver hpbot hP),
       Multiset.one_le_count_iff_mem, ← Multiset.mem_toFinset, ← primesOverFinset,
       ← Finset.mem_coe, coe_primesOverFinset _ p hpbot]
     rwa [ne_eq, Ideal.map_eq_bot_iff_of_injective hRS]
 
-lemma isUnramifiedAt_of_Separable_minpoly [IsSeparable K L]
+lemma isUnramifiedAt_of_Separable_minpoly [Algebra.IsSeparable K L]
     (p : Ideal R) [hp : p.IsPrime] (hpbot : p ≠ ⊥) (x : L) (hx : IsIntegral R x)
     (hx' : Algebra.adjoin K {x} = ⊤)
     (h : Polynomial.Separable ((minpoly R x).map (Ideal.Quotient.mk p))) :
